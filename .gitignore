@@ -102,3 +102,16 @@ dist
 
 # TernJS port file
 .tern-port
+
+# JetBrains
+.idea
+
+# Mac
+.DS_Store
+
+# Terraform files
+.terraform
+.terraform.lock.hcl
+
+# Optional eslint cache
+.eslintcache
