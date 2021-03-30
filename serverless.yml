@@ -1,0 +1,76 @@
+service: weather-station
+variablesResolutionMode: 20210219
+
+custom:
+  applicationBaseName: ${self:service}-${self:provider.stage}
+  dynamodbConnectionsTableName: ${self:custom.applicationBaseName}-connections
+
+plugins:
+  - serverless-plugin-typescript
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: eu-central-1
+  stage: prod
+  memorySize: 128
+  logRetentionInDays: 14
+  lambdaHashingVersion: 20201221
+  deploymentBucket: ba-serverless-deployment-bucket-eu-central-1
+  apiGateway:
+    shouldStartNameWithService: true
+  environment:
+    STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
+    WEBSOCKETS_API_UID: !Ref WebsocketsApi
+    DYNAMODB_CONNECTIONS_TABLE: ${self:custom.dynamodbConnectionsTableName}
+  tags:
+    Project: ${self:service}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.applicationBaseName}*
+functions:
+  connectHandler:
+    handler: src/handler.connectHandler
+    events:
+      - websocket: $connect
+  disconnectHandler:
+    handler: src/handler.disconnectHandler
+    events:
+      - websocket:
+          route: $disconnect
+  pingHandler:
+    handler: src/handler.pingHandler
+    events:
+      - websocket:
+          route: ping
+          routeResponseSelectionExpression: $default
+  dataHandler:
+    handler: src/handler.dataHandler
+    events:
+      - sqs:
+          batchSize: 1
+          arn: ${ssm:${self:custom.applicationBaseName}-data-sqs-arn}
+resources:
+  Resources:
+    ConnectionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.dynamodbConnectionsTableName}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: connectionId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: connectionId
+            KeyType: HASH
