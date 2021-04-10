@@ -1,6 +1,5 @@
 import { ApiGatewayManagementApi } from "aws-sdk"
 import { DeleteItemCommandInput } from "@aws-sdk/client-dynamodb/commands/DeleteItemCommand"
-import { AttributeValue } from "@aws-sdk/client-dynamodb/models/models_0"
 import { DynamoDB, ScanCommandInput } from "@aws-sdk/client-dynamodb"
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 
@@ -22,33 +21,35 @@ export const postToConnection = async (connectionId: string, data: any): Promise
   await apiGatewayManagementApi.postToConnection({ ConnectionId: connectionId, Data: data }).promise()
 }
 
-export const putRecord = async (dynamoDbTable: string, item: { [key: string]: any }): Promise<void> => {
+export const putRecord = async (dynamoDDTable: string, item: Record<string, any>): Promise<void> => {
   const params = {
     Item: marshall(item),
     ReturnConsumedCapacity: "NONE",
-    TableName: dynamoDbTable
+    TableName: dynamoDDTable
   }
   await dynamoDB.putItem(params)
 }
 
-export const scanRecords = async (dynamoDBTable: string, args: Partial<ScanCommandInput> = {}): Promise<unknown> => {
+export const scanRecords = async (
+  dynamoDBTable: string,
+  args: Partial<ScanCommandInput> = {}
+): Promise<Array<Record<string, any>>> => {
   const params = {
     TableName: dynamoDBTable,
     ...args
   }
   const results = await dynamoDB.scan(params)
-  if (!results.Items || !results.Items.length) return []
-  return results.Items.map((item) => unmarshall(item))
+  return results.Items ? results.Items.map((item) => unmarshall(item)) : []
 }
 
 export const deleteRecord = async (
   dynamoDBTable: string,
-  keyCondition: { [key: string]: AttributeValue } | undefined,
+  keyCondition: Record<string, any>,
   args: Partial<DeleteItemCommandInput> = {}
 ): Promise<void> => {
   const params = {
     TableName: dynamoDBTable,
-    Key: keyCondition,
+    Key: marshall(keyCondition),
     ...args
   }
   await dynamoDB.deleteItem(params)

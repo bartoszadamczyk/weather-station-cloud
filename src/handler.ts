@@ -1,58 +1,40 @@
-import { Handler, APIGatewayProxyEvent, APIGatewayProxyResult, Context, SQSEvent, SQSHandler } from "aws-lambda"
-import { returnInternalServerError, returnOk, returnOkJSON } from "./helpers"
-import { deleteConnectionRecord, getConnectionRecords, putConnectionRecord } from "./aws-helpers"
-import { postToConnection } from "./aws"
+import { Handler, APIGatewayProxyEvent, APIGatewayProxyResult, SQSEvent, SQSHandler } from "aws-lambda"
+import { dateToTimestamp } from "./helpers"
+import { returnOk } from "./http"
+import { deleteConnectionRecord, putConnectionRecord, sendToClients } from "./clients"
+import { ActionType, actionSerializer, actionParser } from "./actions"
 
 export const connectHandler: Handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const connectionId = event.requestContext.connectionId
-  if (!connectionId) {
-    console.log("Missing connectionId", event)
-    return returnInternalServerError()
-  }
+  const connectionId = event.requestContext.connectionId as string
   await putConnectionRecord(connectionId)
   return returnOk()
 }
 
 export const disconnectHandler: Handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const connectionId = event.requestContext.connectionId
-  if (!connectionId) {
-    console.log("Missing connectionId", event)
-    return returnInternalServerError()
-  }
+  const connectionId = event.requestContext.connectionId as string
   await deleteConnectionRecord(connectionId)
   return returnOk()
 }
 
 export const pingHandler: Handler = async (): Promise<APIGatewayProxyResult> => {
-  return returnOkJSON({ action: "pong" })
+  const response = {
+    action: ActionType.Pong as const,
+    server_time: dateToTimestamp(new Date())
+  }
+  return returnOk(actionSerializer(response))
 }
 
 export const dataHandler: SQSHandler = async (event: SQSEvent): Promise<void> => {
-  const records = event.Records
-  if (!records.length) {
-    console.log("Missing body", event)
-    throw new Error("Missing body")
-  }
-  const body = records[0].body
-
-  const connections = await getConnectionRecords()
-  if (!connections.length) {
-    console.log("No connections")
-    return
-  }
-
-  await Promise.all(
-    connections.map(async ({ connectionId }) => {
-      try {
-        await postToConnection(connectionId, body)
-      } catch (e) {
-        if (e.statusCode === 410) {
-          console.log(`Found stale connection, deleting ${connectionId}`)
-          return await deleteConnectionRecord(connectionId)
-        }
-        console.log(e)
-        throw e
+  for (let record of event.Records) {
+    const action = actionParser(record.body)
+    if (action) {
+      switch (action.action) {
+        case ActionType.LiveReading:
+          await sendToClients(record.body)
+          break
+        case ActionType.Pong:
+          break
       }
-    })
-  )
+    }
+  }
 }
