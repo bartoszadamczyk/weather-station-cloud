@@ -104,7 +104,7 @@ dist
 .tern-port
 
 # JetBrains
-.idea
+.idea/
 
 # Mac
 .DS_Store

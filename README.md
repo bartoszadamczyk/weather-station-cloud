@@ -4,7 +4,7 @@ Cloud based Raspberry Pi weather station
 
 ### All repositories
 
-- [Web Client](https://github.com/bartoszadamczyk/weather-station-client) - TypeScript, React, Immer, WebSockets
+- [Web Client](https://github.com/bartoszadamczyk/weather-station-client) - Netlify, TypeScript, React, Immer, WebSockets
 - [Cloud API](https://github.com/bartoszadamczyk/weather-station-cloud) - AWS API Gateway (with WebSockets), DynamoDB,
   SQS, Serverless, TypeScript, AJV
 - [Raspberry Pi](https://github.com/bartoszadamczyk/weather-station-rpi) - Raspberry Pi, balena.io, Docker, Python,
