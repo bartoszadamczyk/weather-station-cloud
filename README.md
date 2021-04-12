@@ -2,10 +2,15 @@
 
 Cloud based Raspberry Pi weather station
 
-## Related repos
+### All repositories
 
-- [weather-station-client](https://github.com/bartoszadamczyk/weather-station-client)
-- [weather-station-rpi](https://github.com/bartoszadamczyk/weather-station-rpi)
+- [Web Client](https://github.com/bartoszadamczyk/weather-station-client) - TypeScript, React, Immer, WebSockets
+- [Cloud API](https://github.com/bartoszadamczyk/weather-station-cloud) - AWS API Gateway (with WebSockets), DynamoDB,
+  SQS, Serverless, TypeScript, AJV
+- [Raspberry Pi](https://github.com/bartoszadamczyk/weather-station-rpi) - Raspberry Pi, balena.io, Docker, Python,
+  AsyncIO, SQS, Mypy, Black, Flake8
+
+![All sensors module](https://github.com/bartoszadamczyk/weather-station-rpi/blob/main/docs/all-sensors-module.jpg?raw=true)
 
 ## Serverless vs Terraform
 
@@ -29,7 +34,9 @@ by a serverless teardown or updates.
 > infrastructure will generally be managed outside of your deploy pipeline.
 [[Source](https://www.serverless.com/blog/definitive-guide-terraform-serverless)]
 
-## Naming convention
+## Naming conventions
+
+### AWS resources
 
 For all AWS resources this project follows naming convention:
 
@@ -42,3 +49,8 @@ This provides:
 - no conflicts with other `accounts`, `regions`, `environments`,
 - it is easy to read for humans,
 - for a `name`, `region` and `env` we can use wildcard for example in the `IAM` policies.
+
+### Variables and data naming convention
+
+- Variables in database, API, and data pipelines should use `snake_case`
+- Time should be stored as timestamp with milliseconds
