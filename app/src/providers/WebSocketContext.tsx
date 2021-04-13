@@ -2,7 +2,8 @@ import React, { createContext, ReactElement, useCallback, useContext, useEffect,
 
 import { useWebSocketWithHeartbeat } from "../hooks/useWebSocketWithHeartbeat"
 import { AppContext } from "./AppContext"
-import { ActionSchemaType, actionParser, actionSerializer } from "../types/actions"
+import { ActionSchemaType, actionParser, actionSerializer, ActionType } from "../types/actions"
+import { Actions } from "../reducers"
 
 export const WebSocketContext = createContext<{
   sendAction: (sendMessage: ActionSchemaType) => void
@@ -16,6 +17,17 @@ export const WebSocketContext = createContext<{
 
 const URL = "wss://7b7bmiapid.execute-api.eu-central-1.amazonaws.com/prod"
 
+const dispatchWebSocketAction = (dispatch: React.Dispatch<Actions>, action: ActionSchemaType) => {
+  switch (action.action) {
+    case ActionType.LiveReading:
+      dispatch({
+        type: "NEW_LIVE_METRIC",
+        ...action
+      })
+      break
+  }
+}
+
 export const WebSocketProvider = ({ children }: { children: React.ReactNode }): ReactElement => {
   const { dispatch } = useContext(AppContext)
 
@@ -24,9 +36,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }): 
       if (!messageEvent.data) return
       const action = actionParser(messageEvent.data)
       if (!action) return
-      dispatch({
-        type: "TOGGLE_THEME"
-      })
+      dispatchWebSocketAction(dispatch, action)
     },
     [dispatch]
   )
