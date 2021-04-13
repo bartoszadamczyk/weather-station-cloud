@@ -57,6 +57,7 @@ export const metricReducer = (draft: MetricState, action: Actions): void => {
           metric.liveReadings.push(reading)
           metric.latestReading = reading
           metric.liveReadings = metric.liveReadings.slice(-50)
+          metric.liveReadings = metric.liveReadings.sort((a, b) => (a.createdOn > b.createdOn ? 1 : -1))
         } else {
           draft.metrics.push({
             id,

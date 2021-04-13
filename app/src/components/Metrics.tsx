@@ -18,6 +18,9 @@ const columns: ColumnsType<MetricRecord> = [
     fixed: "left",
     render: function renderDeviceName(deviceId) {
       return lookUp[deviceId]
+    },
+    sorter: function sorter(a, b) {
+      return a.deviceId > b.deviceId ? 1 : -1
     }
   },
   {
@@ -25,6 +28,9 @@ const columns: ColumnsType<MetricRecord> = [
     dataIndex: "componentType",
     render: function renderTag(type) {
       return <Tag color={"blue"}>{type.toUpperCase()}</Tag>
+    },
+    sorter: function sorter(a, b) {
+      return a.componentType > b.componentType ? 1 : -1
     }
   },
   {
@@ -48,6 +54,9 @@ const columns: ColumnsType<MetricRecord> = [
         default:
           return <Tag>{metricName}</Tag>
       }
+    },
+    sorter: function sorter(a, b) {
+      return a.metric > b.metric ? 1 : -1
     }
   },
   {
@@ -61,6 +70,8 @@ const columns: ColumnsType<MetricRecord> = [
           return `${value.toFixed(2)}%`
         case MetricType.Pressure:
           return `${value.toFixed(0)}hPa`
+        case MetricType.Gas:
+          return `${value.toFixed(0)}Ω`
         default:
           return value
       }
@@ -93,7 +104,7 @@ const Metrics = (): ReactElement => {
   const { state } = useContext(AppContext)
   return (
     <div className="Metrics">
-      <Table<MetricRecord> dataSource={state.metric.metrics} columns={columns} rowKey={"id"} size={"small"} />
+      <Table<MetricRecord> dataSource={state.metric.metrics} columns={columns} rowKey={"id"} />
     </div>
   )
 }
