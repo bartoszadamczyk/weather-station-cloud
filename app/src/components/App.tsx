@@ -1,12 +1,12 @@
-import React, { ReactElement, useCallback, useContext, useEffect, useState } from "react"
+import React, { ReactElement, useContext } from "react"
 
 import "./App.css"
 import { AppContext } from "../context/AppContext"
 
-const lookUp: Record<string, string> = {
-  d1babde1b9b4b22b1d90f07b2a95180d: "LON",
-  "364cb313d02c9120c1d8efe788a36245": "KTW"
-}
+// const lookUp: Record<string, string> = {
+//   d1babde1b9b4b22b1d90f07b2a95180d: "LON",
+//   "364cb313d02c9120c1d8efe788a36245": "KTW"
+// }
 
 const App = (): ReactElement => {
   // const [readings, setReadings] = useImmer<Record<string, Reading>>({})
