@@ -2,7 +2,7 @@ import { Handler, APIGatewayProxyEvent, APIGatewayProxyResult, SQSEvent, SQSHand
 import { dateToTimestamp } from "./helpers"
 import { returnOk } from "./http"
 import { deleteConnectionRecord, putConnectionRecord, sendToClients } from "./clients"
-import { ActionType, actionSerializer, actionParser } from "./actions"
+import { ActionType, actionSerializer, actionParser } from "./types/actions"
 
 export const connectHandler: Handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const connectionId = event.requestContext.connectionId as string
@@ -25,7 +25,7 @@ export const pingHandler: Handler = async (): Promise<APIGatewayProxyResult> => 
 }
 
 export const dataHandler: SQSHandler = async (event: SQSEvent): Promise<void> => {
-  for (let record of event.Records) {
+  for (const record of event.Records) {
     const action = actionParser(record.body)
     if (action) {
       switch (action.action) {

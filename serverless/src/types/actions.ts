@@ -59,7 +59,7 @@ export type AggregatedReadingAction = {
   range: 5
 }
 
-type ActionSchemaType = PongAction | LiveReadingAction
+export type ActionSchemaType = PongAction | LiveReadingAction
 
 const actionSchema: JTDSchemaType<ActionSchemaType> = {
   discriminator: "action",

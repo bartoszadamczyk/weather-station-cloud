@@ -1,23 +1,8 @@
-import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
-
-const ajv = new Ajv()
-
 import { deleteRecord, postToConnection, putRecord, scanRecords } from "./aws"
 import { getEnvVar } from "./helpers"
+import { ConnectionRecord, connectionRecordValidator } from "./types/connections"
 
 const DYNAMODB_CONNECTIONS_TABLE = getEnvVar("DYNAMODB_CONNECTIONS_TABLE")
-
-export type ConnectionRecord = {
-  connectionId: string
-}
-
-const connectionRecordSchema: JTDSchemaType<ConnectionRecord> = {
-  properties: {
-    connectionId: { type: "string" }
-  }
-}
-
-const connectionRecordValidator = ajv.compile(connectionRecordSchema)
 
 export const putConnectionRecord = async (connectionId: string): Promise<void> => {
   await putRecord(DYNAMODB_CONNECTIONS_TABLE, { connectionId })
@@ -34,7 +19,7 @@ export const deleteConnectionRecord = async (connectionId: string): Promise<void
 
 export const sendToClients = async (data: string) => {
   const connections = await getConnectionRecords()
-  for (let { connectionId } of connections) {
+  for (const { connectionId } of connections) {
     try {
       await postToConnection(connectionId, data)
     } catch (e) {
