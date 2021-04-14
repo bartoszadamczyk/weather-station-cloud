@@ -37,13 +37,13 @@ resource "aws_sqs_queue" "sqs_data_dead_letter_queue" {
   tags = local.common_tags
 }
 
-resource "aws_iam_group" "aws_iam_group_rpi" {
+resource "aws_iam_group" "iam_group_rpi" {
   name = "${local.app_name}-${local.env}-${data.aws_region.current.name}-rpi"
 }
 
-resource "aws_iam_group_policy" "my_developer_policy" {
+resource "aws_iam_group_policy" "iam_group_policy_rpi" {
   name = "sqs_data_queue_access_policy"
-  group = aws_iam_group.aws_iam_group_rpi.name
+  group = aws_iam_group.iam_group_rpi.name
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -60,7 +60,7 @@ resource "aws_iam_group_policy" "my_developer_policy" {
   })
 }
 
-resource "aws_ssm_parameter" "endpoint" {
+resource "aws_ssm_parameter" "ssm_data_sqs_arn" {
   name        = "${local.app_name}-${local.env}-data-sqs-arn"
   description = "Weather station data sqs arn"
   type        = "String"
