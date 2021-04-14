@@ -1,18 +1,11 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import "./index.css"
-import App from "./components/App"
+import AppData from "./components/AppData"
 import reportWebVitals from "./reportWebVitals"
-import { AppContextProvider } from "./providers/AppContext"
-import { WebSocketProvider } from "./providers/WebSocketContext"
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppContextProvider>
-      <WebSocketProvider>
-        <App />
-      </WebSocketProvider>
-    </AppContextProvider>
+    <AppData />
   </React.StrictMode>,
   document.getElementById("root")
 )

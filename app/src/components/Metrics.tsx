@@ -1,110 +1,107 @@
-import React, { ReactElement, useContext } from "react"
+import React, { ReactElement, useContext, useMemo } from "react"
 import { AppContext } from "../providers/AppContext"
 import { Table, Tag } from "antd"
 import { ColumnsType } from "antd/lib/table/interface"
-import { TinyArea } from "@ant-design/charts"
 import { MetricRecord, ReadingRecord } from "../reducers/metric"
-import { MetricType } from "../types/actions"
+import { ComponentType, MetricType } from "../types/actions"
+import { useTranslation } from "react-i18next"
+import Value from "./Value"
+import TinyPreview from "./TinyPreview"
 
 const lookUp: Record<string, string> = {
   d1babde1b9b4b22b1d90f07b2a95180d: "LON",
   "364cb313d02c9120c1d8efe788a36245": "KTW"
 }
 
-const columns: ColumnsType<MetricRecord> = [
-  {
-    title: "Device",
-    dataIndex: "deviceId",
-    fixed: "left",
-    render: function renderDeviceName(deviceId) {
-      return lookUp[deviceId]
-    },
-    sorter: function sorter(a, b) {
-      return a.deviceId > b.deviceId ? 1 : -1
-    }
-  },
-  {
-    title: "Type",
-    dataIndex: "componentType",
-    render: function renderTag(type) {
-      return <Tag color={"blue"}>{type.toUpperCase()}</Tag>
-    },
-    sorter: function sorter(a, b) {
-      return a.componentType > b.componentType ? 1 : -1
-    }
-  },
-  {
-    title: "Component ID",
-    dataIndex: "componentId"
-  },
-  {
-    title: "Metric",
-    dataIndex: "metric",
-    render: function renderTag(metric) {
-      const metricName = metric.toUpperCase()
-      switch (metric) {
-        case MetricType.Temperature:
-          return <Tag color="red">{metricName}</Tag>
-        case MetricType.Humidity:
-          return <Tag color="blue">{metricName}</Tag>
-        case MetricType.Pressure:
-          return <Tag color="gold">{metricName}</Tag>
-        case MetricType.Gas:
-          return <Tag color="purple">{metricName}</Tag>
-        default:
-          return <Tag>{metricName}</Tag>
-      }
-    },
-    sorter: function sorter(a, b) {
-      return a.metric > b.metric ? 1 : -1
-    }
-  },
-  {
-    title: "Value",
-    dataIndex: ["latestReading", "value"],
-    render: function renderValue(value, metric) {
-      switch (metric.metric) {
-        case MetricType.Temperature:
-          return `${value.toFixed(2)}°C`
-        case MetricType.Humidity:
-          return `${value.toFixed(2)}%`
-        case MetricType.Pressure:
-          return `${value.toFixed(0)}hPa`
-        case MetricType.Gas:
-          return `${value.toFixed(0)}Ω`
-        default:
-          return value
-      }
-    }
-  },
-  {
-    title: "Chart",
-    dataIndex: "liveReadings",
-    render: function renderValue(readings: Array<ReadingRecord>) {
-      let data = readings.map((reading) => Math.round(reading.value * 100) / 100)
-      if (data.length < 20) {
-        data = Array(20 - data.length)
-          .fill(data[0])
-          .concat(data)
-      }
-      const config = {
-        height: 22,
-        width: 200,
-        autoFit: false,
-        data,
-        smooth: true,
-        limitInPlot: false
-      }
-      return <TinyArea {...config} />
-    }
-  }
-]
+const getOnFilter = <R extends Record<string, unknown>>(key: keyof R) => {
+  return (value: string | number | boolean, record: R) => value === record[key]
+}
+
+const getKey = <R,>(obj: R, keys: Array<keyof R>) => keys.map((key) => obj[key]).join("_")
+const getSorter = <R extends Record<string, unknown>>(keys: Array<keyof R>) => {
+  return (a: R, b: R) => (getKey(a, keys) > getKey(b, keys) ? 1 : -1)
+}
 
 const Metrics = (): ReactElement => {
   const { state } = useContext(AppContext)
+  const { t } = useTranslation()
+
+  const columns: ColumnsType<MetricRecord> = useMemo(
+    () => [
+      {
+        title: t("tableColumns.deviceId"),
+        dataIndex: "deviceId",
+        render: function renderDeviceName(deviceId) {
+          return lookUp[deviceId]
+        },
+        filters: [
+          { text: "LON", value: "d1babde1b9b4b22b1d90f07b2a95180d" },
+          { text: "KTW", value: "364cb313d02c9120c1d8efe788a36245" }
+        ],
+        onFilter: getOnFilter<MetricRecord>("deviceId"),
+        sorter: getSorter<MetricRecord>(["deviceId"])
+      },
+      {
+        title: t("tableColumns.componentType"),
+        dataIndex: "componentType",
+        render: function renderTag(type: ComponentType) {
+          return <Tag color={"blue"}>{t(`componentTypes.${type}` as const)}</Tag>
+        },
+        filters: [
+          { value: ComponentType.CPU, text: t(`componentTypes.${ComponentType.CPU}` as const) },
+          { value: ComponentType.DHT22, text: t(`componentTypes.${ComponentType.DHT22}` as const) },
+          { value: ComponentType.DS18B20, text: t(`componentTypes.${ComponentType.DS18B20}` as const) },
+          { value: ComponentType.BME680, text: t(`componentTypes.${ComponentType.BME680}` as const) }
+        ],
+        onFilter: getOnFilter<MetricRecord>("componentType"),
+        sorter: getSorter<MetricRecord>(["componentType"])
+      },
+      {
+        title: t("tableColumns.componentId"),
+        dataIndex: "componentId"
+      },
+      {
+        title: t("tableColumns.metric"),
+        dataIndex: "metric",
+        render: function renderTag(metric: MetricType) {
+          return <Tag color={t(`metricTypeColors.${metric}` as const)}>{t(`metricTypes.${metric}` as const)}</Tag>
+        },
+        filters: [
+          { value: MetricType.Temperature, text: t(`metricTypes.${MetricType.Temperature}` as const) },
+          { value: MetricType.Humidity, text: t(`metricTypes.${MetricType.Humidity}` as const) },
+          { value: MetricType.Pressure, text: t(`metricTypes.${MetricType.Pressure}` as const) },
+          { value: MetricType.Gas, text: t(`metricTypes.${MetricType.Gas}` as const) }
+        ],
+        onFilter: getOnFilter<MetricRecord>("metric"),
+        sorter: getSorter<MetricRecord>(["metric"])
+      },
+      {
+        title: t("tableColumns.value"),
+        dataIndex: ["recentValue"],
+        fixed: "right",
+        render: function renderValue(value: number, metric: MetricRecord) {
+          return <Value value={value} metric={metric.metric} />
+        },
+        sorter: getSorter<MetricRecord>(["metric", "recentValue"])
+      },
+      {
+        title: t("tableColumns.chart"),
+        dataIndex: "liveReadings",
+        render: function renderValue(readings: Array<ReadingRecord>) {
+          return <TinyPreview readings={readings} />
+        }
+      }
+    ],
+    [t]
+  )
   return (
     <div className="Metrics">
-      <Table<MetricRecord> dataSource={state.metric.metrics} columns={columns} rowKey={"id"} />
+      <Table<MetricRecord>
+        dataSource={state.metric.metrics}
+        columns={columns}
+        rowKey={"id"}
+        pagination={{ position: ["bottomCenter"] }}
+      />
     </div>
   )
 }

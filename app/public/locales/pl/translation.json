@@ -1,0 +1,28 @@
+{
+  "title": "Stacja Pogodowa",
+  "tableColumns": {
+    "deviceId": "Urządzenie",
+    "componentType": "Typ",
+    "componentId": "Czujnik",
+    "metric": "Kategoria",
+    "value": "Wartość",
+    "chart": "Wykres"
+  },
+  "componentTypes": {
+    "cpu": "PROCESOR",
+    "dht22": "DHT22",
+    "ds18b20":  "DS18B20",
+    "bme680": "BME680",
+    "relay":  "PRZEKAŹNIK"
+  },
+  "metricTypes": {
+    "temperature": "TEMPERATURA",
+    "humidity": "WILGOTNOŚĆ",
+    "pressure": "CIŚNIENIE",
+    "gas": "GAZ",
+    "init": "START",
+    "state": "STAN",
+    "change": "ZMIANA",
+    "cleanup": "STOP"
+  }
+}

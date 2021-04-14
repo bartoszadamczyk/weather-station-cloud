@@ -1,3 +1,4 @@
+import { sortBy } from "lodash"
 import { Actions } from "./index"
 import { ComponentType, LiveReadingAction, MetricType } from "../types/actions"
 
@@ -13,7 +14,7 @@ export type MetricRecord = {
   componentId: string
   metric: MetricType
   liveReadings: Array<ReadingRecord>
-  latestReading: ReadingRecord
+  recentValue: number
 }
 
 export type MetricState = {
@@ -55,9 +56,9 @@ export const metricReducer = (draft: MetricState, action: Actions): void => {
         }
         if (metric) {
           metric.liveReadings.push(reading)
-          metric.latestReading = reading
           metric.liveReadings = metric.liveReadings.slice(-50)
-          metric.liveReadings = metric.liveReadings.sort((a, b) => (a.createdOn > b.createdOn ? 1 : -1))
+          metric.liveReadings = sortBy(metric.liveReadings, "createdOn")
+          metric.recentValue = metric.liveReadings[metric.liveReadings.length - 1].value
         } else {
           draft.metrics.push({
             id,
@@ -65,10 +66,10 @@ export const metricReducer = (draft: MetricState, action: Actions): void => {
             componentType: action.component_type,
             componentId: action.component_id,
             metric: action.metric,
-            liveReadings: [reading],
-            latestReading: reading
+            recentValue: reading.value,
+            liveReadings: [reading]
           })
-          draft.metrics.sort((a, b) => (a.id > b.id ? 1 : -1))
+          draft.metrics = sortBy(draft.metrics, "id")
         }
       })()
       break
