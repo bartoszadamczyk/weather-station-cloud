@@ -78,7 +78,6 @@ const Metrics = (): ReactElement => {
       {
         title: t("tableColumns.value"),
         dataIndex: ["recentValue"],
-        fixed: "right",
         render: function renderValue(value: number, metric: MetricRecord) {
           return <Value value={value} metric={metric.metric} />
         },

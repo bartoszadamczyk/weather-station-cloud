@@ -18,7 +18,9 @@ const AppUI = (): ReactElement => {
     <ConfigProvider locale={antLocale}>
       <IconContext.Provider value={{ size: "15px", style: { display: "block", margin: "0 0 2px" } }}>
         <Metrics />
-        <Button icon={<IoIosFlag />} onClick={toggleLanguage}></Button>
+        <Button onClick={toggleLanguage}>
+          <IoIosFlag />
+        </Button>
       </IconContext.Provider>
     </ConfigProvider>
   )
