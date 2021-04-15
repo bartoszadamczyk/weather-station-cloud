@@ -6,7 +6,7 @@ import { MetricRecord, ReadingRecord } from "../reducers/metric"
 import { ComponentType, MetricType } from "../types/actions"
 import { useTranslation } from "react-i18next"
 import Value from "./Value"
-import TinyPreview from "./TinyPreview"
+// import TinyPreview from "./TinyPreview"
 
 const lookUp: Record<string, string> = {
   d1babde1b9b4b22b1d90f07b2a95180d: "LON",
@@ -87,7 +87,8 @@ const Metrics = (): ReactElement => {
         title: t("tableColumns.chart"),
         dataIndex: "liveReadings",
         render: function renderValue(readings: Array<ReadingRecord>) {
-          return <TinyPreview readings={readings} />
+          return <p>{readings.length}</p>
+          // return <TinyPreview readings={readings} />
         }
       }
     ],
