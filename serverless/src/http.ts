@@ -1,35 +1,40 @@
-export const returnCustom = (statusCode: number, body: string) => {
+type ReturnType = {
+  statusCode: number
+  body: string
+}
+
+export const returnCustom = (statusCode: number, body: string): ReturnType => {
   return { statusCode, body }
 }
 
-export const returnOk = (body = "Ok") => {
+export const returnOk = (body = "Ok"): ReturnType => {
   return returnCustom(200, body)
 }
 
-export const returnOkJSON = (body: any = "Ok") => {
+export const returnOkJSON = (body: any = "Ok"): ReturnType => {
   return returnOk(JSON.stringify(body))
 }
 
-export const returnBadRequest = (body = "Bad Request") => {
+export const returnBadRequest = (body = "Bad Request"): ReturnType => {
   return returnCustom(400, body)
 }
 
-export const returnUnauthorized = (body = "Unauthorized") => {
+export const returnUnauthorized = (body = "Unauthorized"): ReturnType => {
   return returnCustom(401, body)
 }
 
-export const returnForbidden = (body = "Forbidden") => {
+export const returnForbidden = (body = "Forbidden"): ReturnType => {
   return returnCustom(403, body)
 }
 
-export const returnNotFound = (body = "Not Found") => {
+export const returnNotFound = (body = "Not Found"): ReturnType => {
   return returnCustom(404, body)
 }
 
-export const returnInternalServerError = (body = "Internal Server Error") => {
+export const returnInternalServerError = (body = "Internal Server Error"): ReturnType => {
   return returnCustom(500, body)
 }
 
-export const returnNotImplemented = (body = "Not Implemented") => {
+export const returnNotImplemented = (body = "Not Implemented"): ReturnType => {
   return returnCustom(501, body)
 }
