@@ -67,3 +67,22 @@ resource "aws_ssm_parameter" "ssm_data_sqs_arn" {
   value       = aws_sqs_queue.sqs_data_queue.arn
   tags = local.common_tags
 }
+
+resource "aws_dynamodb_table" "dynamodb_mappings" {
+  name           = "${local.app_name}-${local.env}-mappings"
+  billing_mode   = "PAY_PER_REQUEST"
+  hash_key       = "deviceId"
+  range_key      = "moduleId"
+
+  attribute {
+    name = "deviceId"
+    type = "S"
+  }
+
+  attribute {
+    name = "moduleId"
+    type = "S"
+  }
+
+  tags = local.common_tags
+}
