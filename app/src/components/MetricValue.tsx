@@ -48,7 +48,7 @@ const renderValue = (metric: MetricType, value: number) => {
   }
 }
 
-const Value = ({ metric, value }: { metric: MetricType; value: number }): ReactElement => {
+const MetricValue = ({ metric, value }: { metric: MetricType; value: number }): ReactElement => {
   return (
     <div className="Value">
       <Space size="small">{renderValue(metric, value)}</Space>
@@ -56,4 +56,4 @@ const Value = ({ metric, value }: { metric: MetricType; value: number }): ReactE
   )
 }
 
-export default Value
+export default MetricValue

@@ -5,7 +5,7 @@ import { ColumnsType } from "antd/lib/table/interface"
 import { MetricRecord, ReadingRecord } from "../reducers/data"
 import { ModuleType, MetricType } from "../types/actions"
 import { useTranslation } from "react-i18next"
-import Value from "./Value"
+import MetricValue from "./MetricValue"
 import TinyPreview from "./TinyPreview"
 
 const getOnFilter = <R extends Record<string, unknown>>(key: keyof R) => {
@@ -97,7 +97,7 @@ const Metrics = (): ReactElement => {
         title: t("tableColumn.metricValue"),
         dataIndex: ["recentValue"],
         render: function renderValue(value: number, metric: MetricRecord) {
-          return <Value value={value} metric={metric.metricType} />
+          return <MetricValue value={value} metric={metric.metricType} />
         },
         sorter: getSorter<MetricRecord>(["metricType", "recentValue"])
       },

@@ -3,7 +3,7 @@ name: Lint Serverless
 on:
   push:
     paths:
-      - 'serverless'
+      - 'serverless/**'
     branches:
       - '*'
 

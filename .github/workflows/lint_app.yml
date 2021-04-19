@@ -3,7 +3,7 @@ name: Lint App
 on:
   push:
     paths:
-      - 'app'
+      - 'app/**'
     branches:
       - '*'
 
