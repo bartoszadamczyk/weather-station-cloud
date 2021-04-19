@@ -21,13 +21,6 @@ const AppUI = (): ReactElement => {
         <Button onClick={toggleLanguage}>
           <IoIosFlag />
         </Button>
-        <Button
-          onClick={() => {
-            throw new Error("sdf")
-          }}
-        >
-          <IoIosFlag />
-        </Button>
       </IconContext.Provider>
     </ConfigProvider>
   )
