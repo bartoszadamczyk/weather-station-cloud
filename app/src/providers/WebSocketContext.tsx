@@ -15,8 +15,6 @@ export const WebSocketContext = createContext<{
   open: () => undefined
 })
 
-const URL = "wss://7b7bmiapid.execute-api.eu-central-1.amazonaws.com/prod"
-
 const dispatchWebSocketAction = (dispatch: React.Dispatch<Actions>, action: ActionSchemaType) => {
   switch (action.action) {
     case ActionType.LiveReading:
@@ -28,7 +26,13 @@ const dispatchWebSocketAction = (dispatch: React.Dispatch<Actions>, action: Acti
   }
 }
 
-export const WebSocketProvider = ({ children }: { children: React.ReactNode }): ReactElement => {
+export const WebSocketProvider = ({
+  webSocketUrl,
+  children
+}: {
+  webSocketUrl: string
+  children: React.ReactNode
+}): ReactElement => {
   const { dispatch } = useContext(AppContext)
 
   const onMessage = useCallback(
@@ -41,7 +45,10 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }): 
     [dispatch]
   )
 
-  const { isConnected, isReconnecting, isClosed, close, open, send } = useWebSocketWithHeartbeat(URL, onMessage)
+  const { isConnected, isReconnecting, isClosed, close, open, send } = useWebSocketWithHeartbeat(
+    webSocketUrl,
+    onMessage
+  )
 
   const sendAction = useCallback(
     (action: ActionSchemaType) => {
