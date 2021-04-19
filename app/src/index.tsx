@@ -1,7 +1,18 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import * as Sentry from "@sentry/react"
+import { Integrations } from "@sentry/tracing"
+import { Config, Environment } from "./helpers/config"
 import AppData from "./components/AppData"
 import reportWebVitals from "./reportWebVitals"
+
+if (Config.NodeEnv !== Environment.Development && Config.SentryDsn) {
+  Sentry.init({
+    dsn: Config.SentryDsn,
+    environment: Config.NodeEnv,
+    integrations: [new Integrations.BrowserTracing()]
+  })
+}
 
 ReactDOM.render(
   <React.StrictMode>
