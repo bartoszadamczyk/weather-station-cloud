@@ -1,5 +1,10 @@
 {
   "title": "Weather Station",
+  "logoTitle": "Weather station logo",
+  "languages": {
+    "en": "EN",
+    "pl": "PL"
+  },
   "tableColumn": {
     "deviceId": "Device",
     "moduleType": "Type",

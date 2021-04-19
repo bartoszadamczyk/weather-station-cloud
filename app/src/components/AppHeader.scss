@@ -1,0 +1,24 @@
+.AppHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 26px 16px 16px;
+
+  .Logo {
+    display: flex;
+    justify-content: flex-start;
+
+    img {
+      width: 26px;
+      height: 26px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0 0 0 10px;
+    }
+  }
+
+  .Lang {
+    display: flex;
+  }
+}

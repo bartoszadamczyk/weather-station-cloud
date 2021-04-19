@@ -1,5 +1,10 @@
 {
   "title": "Stacja Pogodowa",
+  "logoTitle": "Logo stacji pogodowej ",
+  "languages": {
+    "en": "EN",
+    "pl": "PL"
+  },
   "tableColumn": {
     "deviceId": "Urządzenie",
     "moduleType": "Typ",

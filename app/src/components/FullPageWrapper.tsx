@@ -1,11 +1,8 @@
-import styled from "styled-components"
+import React, { ReactElement } from "react"
+import "./FullPageWrapper.css"
 
-const FullPageWrapper = styled.section`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
+const FullPageWrapper = ({ children }: { children: React.ReactNode }): ReactElement => {
+  return <div className="FullPageWrapper">{children}</div>
+}
 
 export default FullPageWrapper

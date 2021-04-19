@@ -13,45 +13,45 @@ import {
   MdBubbleChart
 } from "react-icons/all"
 
-const renderValue = (metric: MetricType, value: number) => {
-  switch (metric) {
+const renderMetricValue = (metricType: MetricType, metricValue: number) => {
+  switch (metricType) {
     case MetricType.Temperature:
       return (
         <Space size="small">
-          {value < 3 ? <IoSnow /> : value > 20 ? <ImSun /> : <IoIosThermometer />}
-          {`${value.toFixed(2)}°C`}
+          {metricValue < 3 ? <IoSnow /> : metricValue > 20 ? <ImSun /> : <IoIosThermometer />}
+          {`${metricValue.toFixed(2)}°C`}
         </Space>
       )
     case MetricType.Humidity:
       return (
         <Space size="small">
-          {value < 30 ? <BsDroplet /> : value < 60 ? <BsDropletHalf /> : <BsDropletFill />}
-          {`${value.toFixed(2)}%`}
+          {metricValue < 30 ? <BsDroplet /> : metricValue < 60 ? <BsDropletHalf /> : <BsDropletFill />}
+          {`${metricValue.toFixed(2)}%`}
         </Space>
       )
     case MetricType.Pressure:
       return (
         <Space size="small">
-          {value < 1000 ? <BiArrowToBottom /> : <BiArrowFromBottom />}
-          {`${value.toFixed(0)}hPa`}
+          {metricValue < 1000 ? <BiArrowToBottom /> : <BiArrowFromBottom />}
+          {`${metricValue.toFixed(0)}hPa`}
         </Space>
       )
     case MetricType.Gas:
       return (
         <Space size="small">
           <MdBubbleChart />
-          {`${value.toFixed(0)}Ω`}
+          {`${metricValue.toFixed(0)}Ω`}
         </Space>
       )
     default:
-      return value
+      return metricValue
   }
 }
 
 const MetricValue = ({ metric, value }: { metric: MetricType; value: number }): ReactElement => {
   return (
-    <div className="Value">
-      <Space size="small">{renderValue(metric, value)}</Space>
+    <div className="MetricValue">
+      <Space size="small">{renderMetricValue(metric, value)}</Space>
     </div>
   )
 }

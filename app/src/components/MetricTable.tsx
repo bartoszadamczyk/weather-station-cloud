@@ -17,7 +17,7 @@ const getSorter = <R extends Record<string, unknown>>(keys: Array<keyof R>) => {
   return (a: R, b: R) => (getKey(a, keys) > getKey(b, keys) ? 1 : -1)
 }
 
-const Metrics = (): ReactElement => {
+const useColumns = (): ColumnsType<MetricRecord> => {
   const { state } = useContext(AppContext)
   const { t } = useTranslation("translation")
 
@@ -31,6 +31,7 @@ const Metrics = (): ReactElement => {
   )
 
   const columns: ColumnsType<MetricRecord> = useMemo(
+  return useMemo(
     () => [
       {
         title: t("tableColumn.deviceId"),
@@ -104,6 +105,7 @@ const Metrics = (): ReactElement => {
       {
         title: t("tableColumn.chart"),
         dataIndex: "liveReadings",
+        width: 240,
         render: function renderValue(readings: Array<ReadingRecord>) {
           return <TinyPreview readings={readings} />
         }
@@ -111,16 +113,22 @@ const Metrics = (): ReactElement => {
     ],
     [t, deviceFilter]
   )
+}
+const MetricTable = (): ReactElement => {
+  const { state } = useContext(AppContext)
+  const columns = useColumns()
   return (
-    <div className="Metrics">
+    <div className="MetricsTable">
       <Table<MetricRecord>
         dataSource={state.data.live}
         columns={columns}
         rowKey={"id"}
-        pagination={{ position: ["bottomCenter"] }}
+        pagination={false}
+        scroll={{ x: 850 }}
+        sticky
       />
     </div>
   )
 }
 
-export default Metrics
+export default MetricTable
