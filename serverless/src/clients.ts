@@ -1,5 +1,5 @@
 import { deleteRecord, postToConnection, putRecord, scanRecords } from "./aws"
-import { Config } from "./helpers"
+import { Config } from "./config"
 import { ConnectionRecord, connectionRecordValidator } from "./types/connections"
 
 export const putConnectionRecord = async (connectionId: string): Promise<void> => {

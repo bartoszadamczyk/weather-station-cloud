@@ -5,6 +5,8 @@ custom:
   applicationBaseName: ${self:service}-${self:provider.stage}
   dynamodbConnectionsTableName: ${self:custom.applicationBaseName}-connections
   dynamodbMappingsTableName: ${self:custom.applicationBaseName}-mappings
+  sentrySampleRate: 0.0005
+  sentryTracesSampleRate: 0.0001
 
 plugins:
   - serverless-plugin-typescript
@@ -26,6 +28,9 @@ provider:
     WEBSOCKETS_API_ID: !Ref WebsocketsApi
     DYNAMODB_CONNECTIONS_TABLE: ${self:custom.dynamodbConnectionsTableName}
     DYNAMODB_MAPPINGS_TABLE: ${self:custom.dynamodbMappingsTableName}
+    SENTRY_DSN: ${ssm:${self:custom.applicationBaseName}-serverless-sentry-dsn}
+    SENTRY_SAMPLE_RATE: ${self:custom.sentrySampleRate}
+    SENTRY_TRACES_SAMPLE_RATE: ${self:custom.sentryTracesSampleRate}
   tags:
     Project: ${self:service}
   iam:
@@ -61,8 +66,9 @@ functions:
     handler: src/handler.dataHandler
     events:
       - sqs:
-          batchSize: 1
           arn: ${ssm:${self:custom.applicationBaseName}-data-sqs-arn}
+          batchSize: 10
+          maximumBatchingWindow: 10
 resources:
   Resources:
     ConnectionsTable:

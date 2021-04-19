@@ -3,7 +3,7 @@ import { DeleteItemCommandInput } from "@aws-sdk/client-dynamodb/commands/Delete
 import { DynamoDB, QueryCommandInput, ScanCommandInput } from "@aws-sdk/client-dynamodb"
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 
-import { Config } from "./helpers"
+import { Config } from "./config"
 
 const ApiGatewayUrl = `${Config.WebsocketsApiId}.execute-api.${Config.Region}.amazonaws.com/${Config.Stage}`
 
