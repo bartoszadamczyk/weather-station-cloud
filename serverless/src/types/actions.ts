@@ -40,8 +40,8 @@ export type LiveReadingAction = {
   module_type: ModuleType
   module_id: string
   module_name?: string
-  metric: MetricType
-  value: number
+  metric_type: MetricType
+  metric_value: number
 }
 
 export type AggregatedReadingAction = {
@@ -53,14 +53,14 @@ export type AggregatedReadingAction = {
   module_type: ModuleType
   module_id: string
   module_name?: string
-  metric: MetricType
-  first: number
-  last: number
-  min: number
-  max: number
-  mean: number
-  median: number
-  range: 5
+  metric_type: MetricType
+  first_value: number
+  last_value: number
+  min_value: number
+  max_value: number
+  mean_value: number
+  median_value: number
+  readings_no: number
 }
 
 export type ActionSchemaType = PongAction | LiveReadingAction
@@ -80,8 +80,8 @@ const actionSchema: JTDSchemaType<ActionSchemaType> = {
         created_on: { type: "float64" },
         module_type: { enum: Object.values(ModuleType) },
         module_id: { type: "string" },
-        metric: { enum: Object.values(MetricType) },
-        value: { type: "float64" }
+        metric_type: { enum: Object.values(MetricType) },
+        metric_value: { type: "float64" }
       },
       optionalProperties: {
         device_name: { type: "string" },
