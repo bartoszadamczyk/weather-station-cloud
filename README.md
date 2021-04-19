@@ -1,14 +1,20 @@
 # Weather Station Cloud
 
+[![Lint App](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_app.yml/badge.svg?branch=main)](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_app.yml)
+[![Lint Serverless](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_serverless.yml/badge.svg?branch=main)](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_serverless.yml)
+[![Lint Terraform](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_terraform.yml/badge.svg?branch=main)](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_terraform.yml)
+[![License: MIT](https://img.shields.io/github/license/bartoszadamczyk/weather-station-cloud)](https://github.com/bartoszadamczyk/weather-station-cloud/blob/main/LICENSE)
+
 Cloud based Raspberry Pi weather station
 
 ### Repositories
 
 - [Cloud API](https://github.com/bartoszadamczyk/weather-station-cloud)
-  - Web Client - Netlify, TypeScript, React, Immer, WebSockets, i18next, styled-components
-  - Cloud API - Terraform, Serverless, AWS API Gateway (with WebSockets), DynamoDB, SQS, TypeScript, AJV
+    - Web Client - Netlify, TypeScript, React, Immer, WebSockets, i18next, styled-components, Sentry, ESLint, GitHub Actions
+    - Cloud API - Serverless, AWS API Gateway (with WebSockets), DynamoDB, SQS, TypeScript, AJV, Sentry, ESLint, GitHub Actions
+    - Infrastructure - Terraform, TFLint, GitHub Actions
 - [Raspberry Pi](https://github.com/bartoszadamczyk/weather-station-rpi) - Raspberry Pi, balena.io, Docker, Python,
-  AsyncIO, SQS, Mypy, Black, Flake8
+  AsyncIO, SQS, Mypy, Black, Flake8, Sentry, GitHub Actions
 
 ![All sensors module](https://github.com/bartoszadamczyk/weather-station-rpi/blob/main/docs/all-sensors-module.jpg?raw=true)
 
@@ -54,8 +60,8 @@ This provides:
 
 - Variables in API, and data pipelines should use `snake_case`
 - SQL DBs should use `snake_case`
-- DynamoDB should use `camelCase`   
+- DynamoDB should use `camelCase`
 - Constant values in:
-  - Python: `const FOO = "foo"`
-  - TypeScript: `const Foo = "foo"`
+    - Python: `const FOO = "foo"`
+    - TypeScript: `const Foo = "foo"`
 - Time should be stored as timestamp with milliseconds without coma
