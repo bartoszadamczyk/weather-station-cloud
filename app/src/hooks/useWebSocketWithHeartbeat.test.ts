@@ -11,8 +11,8 @@ describe("Test useWebSocketWithHeartbeat hook", () => {
     WS.clean()
   })
 
-  const hookInit = (onMessage: (messageEvent: MessageEvent) => void = defaultOnMessage) =>
   const defaultOnMessage = () => undefined
+  const useInit = (onMessage: (messageEvent: MessageEvent) => void = defaultOnMessage) =>
     useWebSocketWithHeartbeat(WS_URL, onMessage, 1, 1, 1)
   const initServer = (): WS => {
     return new WS(WS_URL)
@@ -24,7 +24,7 @@ describe("Test useWebSocketWithHeartbeat hook", () => {
 
   test("Test it connects to server", async () => {
     server = initServer()
-    const { result } = renderHook(hookInit)
+    const { result } = renderHook(useInit)
 
     await server.connected
     expect(result.current.isConnected).toBeTruthy()
@@ -37,7 +37,7 @@ describe("Test useWebSocketWithHeartbeat hook", () => {
     server.close()
     await server.closed
 
-    const { result, waitForNextUpdate } = renderHook(hookInit)
+    const { result, waitForNextUpdate } = renderHook(useInit)
     await waitForNextUpdate()
     expect(result.current.isConnected).toBeFalsy()
     expect(result.current.isReconnecting).toBeTruthy()
@@ -53,7 +53,7 @@ describe("Test useWebSocketWithHeartbeat hook", () => {
 
   test("Test it handles server closed", async () => {
     server = initServer()
-    const { result } = renderHook(hookInit)
+    const { result } = renderHook(useInit)
     await server.connected
     expect(result.current.isConnected).toBeTruthy()
     expect(result.current.isReconnecting).toBeFalsy()
@@ -76,7 +76,7 @@ describe("Test useWebSocketWithHeartbeat hook", () => {
 
   test("Test it handles server error", async () => {
     server = initServer()
-    const { result } = renderHook(hookInit)
+    const { result } = renderHook(useInit)
     await server.connected
     expect(result.current.isConnected).toBeTruthy()
     expect(result.current.isReconnecting).toBeFalsy()
@@ -99,7 +99,7 @@ describe("Test useWebSocketWithHeartbeat hook", () => {
 
   test("Test it handles manual close and open", async () => {
     server = initServer()
-    const { result } = renderHook(hookInit)
+    const { result } = renderHook(useInit)
     await server.connected
     expect(result.current.isConnected).toBeTruthy()
     expect(result.current.isReconnecting).toBeFalsy()
@@ -126,7 +126,7 @@ describe("Test useWebSocketWithHeartbeat hook", () => {
   test("Test it handles msg from server", async () => {
     server = initServer()
     const onMessage = jest.fn()
-    const { result } = renderHook(() => hookInit(onMessage))
+    const { result } = renderHook(() => useInit(onMessage))
     await server.connected
 
     expect(result.current.isConnected).toBeTruthy()
@@ -139,7 +139,7 @@ describe("Test useWebSocketWithHeartbeat hook", () => {
 
   test("Test it handles msg from client", async () => {
     server = initServer()
-    const { result } = renderHook(hookInit)
+    const { result } = renderHook(useInit)
     await server.connected
     expect(result.current.isConnected).toBeTruthy()
     expect(result.current.isReconnecting).toBeFalsy()
