@@ -1,0 +1,21 @@
+name: Lint App
+
+on:
+  push:
+    paths:
+      - 'app'
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@main
+      - name: Enter app folder
+        run: cd app
+      - name: Install modules
+        run: yarn
+      - name: Run ESLint
+        run: yarn run lint

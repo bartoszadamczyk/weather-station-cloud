@@ -1,0 +1,21 @@
+name: Lint Serverless
+
+on:
+  push:
+    paths:
+      - 'serverless'
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@main
+      - name: Enter serverless folder
+        run: cd serverless
+      - name: Install modules
+        run: yarn
+      - name: Run ESLint
+        run: yarn run lint
