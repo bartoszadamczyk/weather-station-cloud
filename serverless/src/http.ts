@@ -11,7 +11,7 @@ export const returnOk = (body = "Ok"): ReturnType => {
   return returnCustom(200, body)
 }
 
-export const returnOkJSON = (body: any = "Ok"): ReturnType => {
+export const returnOkJSON = (body: unknown = "Ok"): ReturnType => {
   return returnOk(JSON.stringify(body))
 }
 
