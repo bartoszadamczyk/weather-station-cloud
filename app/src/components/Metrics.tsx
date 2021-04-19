@@ -1,17 +1,12 @@
 import React, { ReactElement, useContext, useMemo } from "react"
 import { AppContext } from "../providers/AppContext"
-import { Table, Tag } from "antd"
+import { Table, Tag, Tooltip } from "antd"
 import { ColumnsType } from "antd/lib/table/interface"
 import { MetricRecord, ReadingRecord } from "../reducers/metric"
-import { ComponentType, MetricType } from "../types/actions"
+import { ModuleType, MetricType } from "../types/actions"
 import { useTranslation } from "react-i18next"
 import Value from "./Value"
-// import TinyPreview from "./TinyPreview"
-
-const lookUp: Record<string, string> = {
-  d1babde1b9b4b22b1d90f07b2a95180d: "LON",
-  "364cb313d02c9120c1d8efe788a36245": "KTW"
-}
+import TinyPreview from "./TinyPreview"
 
 const getOnFilter = <R extends Record<string, unknown>>(key: keyof R) => {
   return (value: string | number | boolean, record: R) => value === record[key]
@@ -24,47 +19,70 @@ const getSorter = <R extends Record<string, unknown>>(keys: Array<keyof R>) => {
 
 const Metrics = (): ReactElement => {
   const { state } = useContext(AppContext)
-  const { t } = useTranslation()
+  const { t } = useTranslation("translation")
+
+  const deviceFilter = useMemo(
+    () =>
+      Object.keys(state.metric.devices).map((key) => ({
+        value: key,
+        text: state.metric.devices[key].name || key
+      })),
+    [state.metric.devices]
+  )
 
   const columns: ColumnsType<MetricRecord> = useMemo(
     () => [
       {
         title: t("tableColumns.deviceId"),
         dataIndex: "deviceId",
-        render: function renderDeviceName(deviceId) {
-          return lookUp[deviceId]
+        render: function renderDeviceName(deviceId, { deviceName }) {
+          return deviceName ? (
+            <Tooltip placement="right" title={deviceId}>
+              {deviceName}
+            </Tooltip>
+          ) : (
+            deviceId
+          )
         },
-        filters: [
-          { text: "LON", value: "d1babde1b9b4b22b1d90f07b2a95180d" },
-          { text: "KTW", value: "364cb313d02c9120c1d8efe788a36245" }
-        ],
+        filters: deviceFilter,
         onFilter: getOnFilter<MetricRecord>("deviceId"),
         sorter: getSorter<MetricRecord>(["deviceId"])
       },
       {
-        title: t("tableColumns.componentType"),
-        dataIndex: "componentType",
-        render: function renderTag(type: ComponentType) {
-          return <Tag color={"blue"}>{t(`componentTypes.${type}` as const)}</Tag>
+        title: t("tableColumns.moduleType"),
+        dataIndex: "moduleType",
+        render: function renderTag(type: ModuleType) {
+          return <Tag color={"blue"}>{t(`moduleTypes.${type}` as const)}</Tag>
         },
         filters: [
-          { value: ComponentType.CPU, text: t(`componentTypes.${ComponentType.CPU}` as const) },
-          { value: ComponentType.DHT22, text: t(`componentTypes.${ComponentType.DHT22}` as const) },
-          { value: ComponentType.DS18B20, text: t(`componentTypes.${ComponentType.DS18B20}` as const) },
-          { value: ComponentType.BME680, text: t(`componentTypes.${ComponentType.BME680}` as const) }
+          { value: ModuleType.CPU, text: t(`moduleTypes.${ModuleType.CPU}` as const) },
+          { value: ModuleType.DHT22, text: t(`moduleTypes.${ModuleType.DHT22}` as const) },
+          { value: ModuleType.DS18B20, text: t(`moduleTypes.${ModuleType.DS18B20}` as const) },
+          { value: ModuleType.BME680, text: t(`moduleTypes.${ModuleType.BME680}` as const) }
         ],
-        onFilter: getOnFilter<MetricRecord>("componentType"),
-        sorter: getSorter<MetricRecord>(["componentType"])
+        onFilter: getOnFilter<MetricRecord>("moduleType"),
+        sorter: getSorter<MetricRecord>(["moduleType"])
       },
       {
-        title: t("tableColumns.componentId"),
-        dataIndex: "componentId"
+        title: t("tableColumns.moduleId"),
+        dataIndex: "moduleId",
+        render: function renderDeviceName(moduleId, { moduleName }) {
+          const moduleMapping = t("moduleMappings" as const, { returnObjects: true }) as Record<string, string>
+          return moduleName ? (
+            <Tooltip placement="right" title={moduleId}>
+              {moduleMapping[moduleName] || moduleName}
+            </Tooltip>
+          ) : (
+            moduleMapping[moduleId] || moduleId
+          )
+        }
       },
       {
         title: t("tableColumns.metric"),
         dataIndex: "metric",
         render: function renderTag(metric: MetricType) {
-          return <Tag color={t(`metricTypeColors.${metric}` as const)}>{t(`metricTypes.${metric}` as const)}</Tag>
+          const metricTypeColors = t("metricTypeColors" as const, { returnObjects: true }) as Record<string, string>
+          return <Tag color={metricTypeColors[metric]}>{t(`metricTypes.${metric}` as const)}</Tag>
         },
         filters: [
           { value: MetricType.Temperature, text: t(`metricTypes.${MetricType.Temperature}` as const) },
@@ -87,12 +105,11 @@ const Metrics = (): ReactElement => {
         title: t("tableColumns.chart"),
         dataIndex: "liveReadings",
         render: function renderValue(readings: Array<ReadingRecord>) {
-          return <p>{readings.length}</p>
-          // return <TinyPreview readings={readings} />
+          return <TinyPreview readings={readings} />
         }
       }
     ],
-    [t]
+    [t, deviceFilter]
   )
   return (
     <div className="Metrics">

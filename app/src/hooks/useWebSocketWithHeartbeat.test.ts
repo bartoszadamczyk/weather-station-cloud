@@ -11,7 +11,7 @@ describe("Test useWebSocketWithHeartbeat hook", () => {
     WS.clean()
   })
 
-  let defaultOnMessage = () => {}
+  const defaultOnMessage = () => {}
   const hookInit = (onMessage: (messageEvent: MessageEvent) => void = defaultOnMessage) =>
     useWebSocketWithHeartbeat(WS_URL, onMessage, 1, 1, 1)
   const initServer = (): WS => {

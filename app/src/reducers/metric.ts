@@ -1,6 +1,6 @@
-import { sortBy } from "lodash"
+import { sortBy } from "../helpers/misc"
 import { Actions } from "./index"
-import { ComponentType, LiveReadingAction, MetricType } from "../types/actions"
+import { ModuleType, LiveReadingAction, MetricType } from "../types/actions"
 
 export type ReadingRecord = {
   createdOn: Date
@@ -10,8 +10,10 @@ export type ReadingRecord = {
 export type MetricRecord = {
   id: string
   deviceId: string
-  componentType: ComponentType
-  componentId: string
+  deviceName?: string
+  moduleType: ModuleType
+  moduleId: string
+  moduleName?: string
   metric: MetricType
   liveReadings: Array<ReadingRecord>
   recentValue: number
@@ -19,10 +21,12 @@ export type MetricRecord = {
 
 export type MetricState = {
   metrics: Array<MetricRecord>
+  devices: Record<string, { name?: string }>
 }
 
 export const metricInitialState: MetricState = {
-  metrics: []
+  metrics: [],
+  devices: {}
 }
 
 type NewLiveMetricAction = {
@@ -31,28 +35,25 @@ type NewLiveMetricAction = {
 
 export type MetricAction = NewLiveMetricAction
 
-const metricId = ({
-  device_id,
-  component_id,
-  metric
-}: {
-  device_id: string
-  component_id: string
-  metric: MetricType
-}) => {
-  return `${device_id}_${component_id}_${metric}`
+const metricId = ({ device_id, module_id, metric }: { device_id: string; module_id: string; metric: MetricType }) => {
+  return `${device_id}_${module_id}_${metric}`
 }
 
 export const metricReducer = (draft: MetricState, action: Actions): void => {
   switch (action.type) {
     case "NEW_LIVE_METRIC":
       ;(() => {
-        if (action.component_type === ComponentType.Relay) return
+        if (action.module_type === ModuleType.Relay) return
         const id = metricId(action)
         const metric = draft.metrics.find((m) => m.id === id)
         const reading = {
           createdOn: new Date(action.created_on),
           value: action.value
+        }
+        if (draft.devices[action.device_id]) {
+          draft.devices[action.device_id].name = action.device_name
+        } else {
+          draft.devices[action.device_id] = { name: action.device_name }
         }
         if (metric) {
           metric.liveReadings.push(reading)
@@ -63,8 +64,10 @@ export const metricReducer = (draft: MetricState, action: Actions): void => {
           draft.metrics.push({
             id,
             deviceId: action.device_id,
-            componentType: action.component_type,
-            componentId: action.component_id,
+            deviceName: action.device_name,
+            moduleType: action.module_type,
+            moduleId: action.module_id,
+            moduleName: action.module_name,
             metric: action.metric,
             recentValue: reading.value,
             liveReadings: [reading]
