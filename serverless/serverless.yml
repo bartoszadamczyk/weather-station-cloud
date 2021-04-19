@@ -4,6 +4,7 @@ variablesResolutionMode: 20210219
 custom:
   applicationBaseName: ${self:service}-${self:provider.stage}
   dynamodbConnectionsTableName: ${self:custom.applicationBaseName}-connections
+  dynamodbMappingsTableName: ${self:custom.applicationBaseName}-mappings
 
 plugins:
   - serverless-plugin-typescript
@@ -22,8 +23,9 @@ provider:
   environment:
     STAGE: ${self:provider.stage}
     REGION: ${self:provider.region}
-    WEBSOCKETS_API_UID: !Ref WebsocketsApi
+    WEBSOCKETS_API_ID: !Ref WebsocketsApi
     DYNAMODB_CONNECTIONS_TABLE: ${self:custom.dynamodbConnectionsTableName}
+    DYNAMODB_MAPPINGS_TABLE: ${self:custom.dynamodbMappingsTableName}
   tags:
     Project: ${self:service}
   iam:

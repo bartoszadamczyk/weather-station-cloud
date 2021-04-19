@@ -9,7 +9,8 @@ export type ConnectionRecord = {
 const connectionRecordSchema: JTDSchemaType<ConnectionRecord> = {
   properties: {
     connectionId: { type: "string" }
-  }
+  },
+  additionalProperties: true // Open–closed principle
 }
 
-export const connectionRecordValidator = ajv.compile(connectionRecordSchema)
+export const connectionRecordValidator = ajv.compile<ConnectionRecord>(connectionRecordSchema)

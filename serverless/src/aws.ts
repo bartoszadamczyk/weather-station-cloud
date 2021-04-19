@@ -1,27 +1,23 @@
 import { ApiGatewayManagementApi } from "aws-sdk"
 import { DeleteItemCommandInput } from "@aws-sdk/client-dynamodb/commands/DeleteItemCommand"
-import { DynamoDB, ScanCommandInput } from "@aws-sdk/client-dynamodb"
+import { DynamoDB, QueryCommandInput, ScanCommandInput } from "@aws-sdk/client-dynamodb"
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 
-import { getEnvVar } from "./helpers"
+import { Config } from "./helpers"
 
-const REGION = getEnvVar("REGION")
-const STAGE = getEnvVar("STAGE")
-const WEBSOCKETS_API_UID = getEnvVar("WEBSOCKETS_API_UID")
+const ApiGatewayUrl = `${Config.WebsocketsApiId}.execute-api.${Config.Region}.amazonaws.com/${Config.Stage}`
 
-const API_GATEWAY_URL = `${WEBSOCKETS_API_UID}.execute-api.${REGION}.amazonaws.com/${STAGE}`
-
-const dynamoDB = new DynamoDB({ region: REGION })
+const dynamoDB = new DynamoDB({ region: Config.Region })
 
 // For now using sdk-v2 until the bug is fixed
 // https://github.com/aws/aws-sdk-js-v3/issues/1830
-const apiGatewayManagementApi = new ApiGatewayManagementApi({ endpoint: API_GATEWAY_URL })
+const apiGatewayManagementApi = new ApiGatewayManagementApi({ endpoint: ApiGatewayUrl })
 
-export const postToConnection = async (connectionId: string, data: any): Promise<void> => {
+export const postToConnection = async (connectionId: string, data: string): Promise<void> => {
   await apiGatewayManagementApi.postToConnection({ ConnectionId: connectionId, Data: data }).promise()
 }
 
-export const putRecord = async (dynamoDDTable: string, item: Record<string, any>): Promise<void> => {
+export const putRecord = async (dynamoDDTable: string, item: Record<string, unknown>): Promise<void> => {
   const params = {
     Item: marshall(item),
     ReturnConsumedCapacity: "NONE",
@@ -33,7 +29,7 @@ export const putRecord = async (dynamoDDTable: string, item: Record<string, any>
 export const scanRecords = async (
   dynamoDBTable: string,
   args: Partial<ScanCommandInput> = {}
-): Promise<Array<Record<string, any>>> => {
+): Promise<Array<Record<string, unknown>>> => {
   const params = {
     TableName: dynamoDBTable,
     ...args
@@ -42,9 +38,25 @@ export const scanRecords = async (
   return results.Items ? results.Items.map((item) => unmarshall(item)) : []
 }
 
+export const getRecord = async (
+  dynamoDBTable: string,
+  condition: string,
+  values: Record<string, unknown>,
+  args: Partial<QueryCommandInput> = {}
+): Promise<Array<Record<string, unknown>>> => {
+  const params = {
+    TableName: dynamoDBTable,
+    KeyConditionExpression: condition,
+    ExpressionAttributeValues: marshall(values),
+    ...args
+  }
+  const results = await dynamoDB.query(params)
+  return results.Items ? results.Items.map((item) => unmarshall(item)) : []
+}
+
 export const deleteRecord = async (
   dynamoDBTable: string,
-  keyCondition: Record<string, any>,
+  keyCondition: Record<string, unknown>,
   args: Partial<DeleteItemCommandInput> = {}
 ): Promise<void> => {
   const params = {

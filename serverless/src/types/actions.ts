@@ -2,7 +2,7 @@ import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 
 const ajv = new Ajv()
 
-export enum ComponentType {
+export enum ModuleType {
   CPU = "cpu",
   DHT22 = "dht22",
   DS18B20 = "ds18b20",
@@ -35,9 +35,11 @@ export type PongAction = {
 export type LiveReadingAction = {
   action: ActionType.LiveReading
   device_id: string
+  device_name?: string
   created_on: number
-  component_type: ComponentType
-  component_id: string
+  module_type: ModuleType
+  module_id: string
+  module_name?: string
   metric: MetricType
   value: number
 }
@@ -45,10 +47,12 @@ export type LiveReadingAction = {
 export type AggregatedReadingAction = {
   action: ActionType.AggregatedReading
   device_id: string
+  device_name?: string
   started_on: number
   finished_on: number
-  component_type: ComponentType
-  component_id: string
+  module_type: ModuleType
+  module_id: string
+  module_name?: string
   metric: MetricType
   first: number
   last: number
@@ -67,20 +71,26 @@ const actionSchema: JTDSchemaType<ActionSchemaType> = {
     pong: {
       properties: {
         server_time: { type: "float64" }
-      }
+      },
+      additionalProperties: true // Open–closed principle
     },
     live_reading: {
       properties: {
         device_id: { type: "string" },
         created_on: { type: "float64" },
-        component_type: { enum: Object.values(ComponentType) },
-        component_id: { type: "string" },
+        module_type: { enum: Object.values(ModuleType) },
+        module_id: { type: "string" },
         metric: { enum: Object.values(MetricType) },
         value: { type: "float64" }
-      }
+      },
+      optionalProperties: {
+        device_name: { type: "string" },
+        module_name: { type: "string" }
+      },
+      additionalProperties: true // Open–closed principle
     }
   }
 }
 
-export const actionParser = ajv.compileParser(actionSchema)
-export const actionSerializer = ajv.compileSerializer(actionSchema)
+export const actionParser = ajv.compileParser<ActionSchemaType>(actionSchema)
+export const actionSerializer = ajv.compileSerializer<ActionSchemaType>(actionSchema)

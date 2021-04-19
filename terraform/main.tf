@@ -19,7 +19,7 @@ locals {
   env = "prod"
   app_name = "weather-station"
   common_tags = map(
-    "Project", local.app_name
+  "Project", local.app_name
   )
 }
 
@@ -61,18 +61,18 @@ resource "aws_iam_group_policy" "iam_group_policy_rpi" {
 }
 
 resource "aws_ssm_parameter" "ssm_data_sqs_arn" {
-  name        = "${local.app_name}-${local.env}-data-sqs-arn"
+  name = "${local.app_name}-${local.env}-data-sqs-arn"
   description = "Weather station data sqs arn"
-  type        = "String"
-  value       = aws_sqs_queue.sqs_data_queue.arn
+  type = "String"
+  value = aws_sqs_queue.sqs_data_queue.arn
   tags = local.common_tags
 }
 
 resource "aws_dynamodb_table" "dynamodb_mappings" {
-  name           = "${local.app_name}-${local.env}-mappings"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "deviceId"
-  range_key      = "moduleId"
+  name = "${local.app_name}-${local.env}-mappings"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key = "deviceId"
+  range_key = "moduleId"
 
   attribute {
     name = "deviceId"

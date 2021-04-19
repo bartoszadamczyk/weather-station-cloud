@@ -1,23 +1,21 @@
 import { deleteRecord, postToConnection, putRecord, scanRecords } from "./aws"
-import { getEnvVar } from "./helpers"
+import { Config } from "./helpers"
 import { ConnectionRecord, connectionRecordValidator } from "./types/connections"
 
-const DYNAMODB_CONNECTIONS_TABLE = getEnvVar("DYNAMODB_CONNECTIONS_TABLE")
-
 export const putConnectionRecord = async (connectionId: string): Promise<void> => {
-  await putRecord(DYNAMODB_CONNECTIONS_TABLE, { connectionId })
+  await putRecord(Config.DynamoDBConnectionsTable, { connectionId })
 }
 
 export const getConnectionRecords = async (): Promise<Array<ConnectionRecord>> => {
-  const records = await scanRecords(DYNAMODB_CONNECTIONS_TABLE)
+  const records = await scanRecords(Config.DynamoDBConnectionsTable)
   return records.filter((record): record is ConnectionRecord => connectionRecordValidator(record))
 }
 
 export const deleteConnectionRecord = async (connectionId: string): Promise<void> => {
-  await deleteRecord(DYNAMODB_CONNECTIONS_TABLE, { connectionId })
+  await deleteRecord(Config.DynamoDBConnectionsTable, { connectionId })
 }
 
-export const sendToClients = async (data: string) => {
+export const sendToClients = async (data: string): Promise<void> => {
   const connections = await getConnectionRecords()
   for (const { connectionId } of connections) {
     try {
