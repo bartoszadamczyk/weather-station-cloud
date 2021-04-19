@@ -10,11 +10,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app
     steps:
       - name: Checkout Repo
         uses: actions/checkout@main
-      - name: Enter app folder
-        run: cd app
       - name: Install modules
         run: yarn
       - name: Run ESLint

@@ -10,11 +10,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./serverless
     steps:
       - name: Checkout Repo
         uses: actions/checkout@main
-      - name: Enter serverless folder
-        run: cd serverless
       - name: Install modules
         run: yarn
       - name: Run ESLint
