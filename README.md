@@ -52,5 +52,10 @@ This provides:
 
 ### Variables and data naming convention
 
-- Variables in database, API, and data pipelines should use `snake_case`
-- Time should be stored as timestamp with milliseconds
+- Variables in API, and data pipelines should use `snake_case`
+- SQL DBs should use `snake_case`
+- DynamoDB should use `camelCase`   
+- Constant values in:
+  - Python: `const FOO = "foo"`
+  - TypeScript: `const Foo = "foo"`
+- Time should be stored as timestamp with milliseconds without coma

@@ -2,13 +2,13 @@
   "title": "Weather Station",
   "tableColumns": {
     "deviceId": "Device",
-    "componentType": "Type",
-    "componentId": "Sensor",
+    "moduleType": "Type",
+    "moduleId": "Sensor",
     "metric": "Metric",
     "value": "Value",
     "chart": "Chart"
   },
-  "componentTypes": {
+  "moduleTypes": {
     "cpu": "CPU",
     "dht22": "DHT22",
     "ds18b20":  "DS18B20",
@@ -29,10 +29,10 @@
     "temperature": "red",
     "humidity": "blue",
     "pressure": "gold",
-    "gas": "purple",
-    "init": "lime",
-    "state": "lime",
-    "change": "lime",
-    "cleanup": "lime"
+    "gas": "purple"
+  },
+  "moduleMappings": {
+    "cpu": "cpu",
+    "probe": "probe"
   }
 }

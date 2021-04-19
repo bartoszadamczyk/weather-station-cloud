@@ -2,13 +2,13 @@
   "title": "Stacja Pogodowa",
   "tableColumns": {
     "deviceId": "Urządzenie",
-    "componentType": "Typ",
-    "componentId": "Czujnik",
+    "moduleType": "Typ",
+    "moduleId": "Czujnik",
     "metric": "Kategoria",
     "value": "Wartość",
     "chart": "Wykres"
   },
-  "componentTypes": {
+  "moduleTypes": {
     "cpu": "PROCESOR",
     "dht22": "DHT22",
     "ds18b20":  "DS18B20",
@@ -24,5 +24,9 @@
     "state": "STAN",
     "change": "ZMIANA",
     "cleanup": "STOP"
+  },
+  "moduleMappings": {
+    "cpu": "procesor",
+    "probe": "sonda"
   }
 }
