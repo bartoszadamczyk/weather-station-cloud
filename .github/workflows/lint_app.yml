@@ -15,7 +15,7 @@ jobs:
       run:
         working-directory: ./app
     steps:
-      - name: Checkout Repo
+      - name: Checkout source code
         uses: actions/checkout@main
       - name: Install modules
         run: yarn
