@@ -1,26 +1,22 @@
 import { Dispatch, useReducer } from "react"
 import { produce } from "immer"
-import { ThemeAction, themeInitialState, themeReducer, ThemeState } from "./theme"
-import { MetricAction, metricInitialState, metricReducer, MetricState } from "./metric"
-import { WebSocketAction, webSocketInitialState, webSocketReducer, WebSocketState } from "./webSocket"
+import { DataActions, dataInitialState, dataReducer, DataState } from "./data"
+import { WebSocketActions, webSocketInitialState, webSocketReducer, WebSocketState } from "./webSocket"
 
 export type State = {
-  metric: MetricState
-  theme: ThemeState
+  data: DataState
   webSocket: WebSocketState
 }
 
 export const initialState: State = {
-  metric: metricInitialState,
-  theme: themeInitialState,
+  data: dataInitialState,
   webSocket: webSocketInitialState
 }
 
-export type Actions = MetricAction | ThemeAction | WebSocketAction
+export type Actions = DataActions | WebSocketActions
 
 const mainReducer = (state: State, action: Actions) => {
-  metricReducer(state.metric, action)
-  themeReducer(state.theme, action)
+  dataReducer(state.data, action)
   webSocketReducer(state.webSocket, action)
 }
 

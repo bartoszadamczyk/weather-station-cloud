@@ -18,7 +18,7 @@ type WebSocketStateUpdateAction = {
   isReconnecting: boolean
   isClosed: boolean
 }
-export type WebSocketAction = WebSocketStateUpdateAction
+export type WebSocketActions = WebSocketStateUpdateAction
 
 export const webSocketReducer = (draft: WebSocketState, action: Actions): void => {
   switch (action.type) {

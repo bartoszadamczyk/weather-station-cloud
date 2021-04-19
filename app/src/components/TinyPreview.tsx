@@ -1,9 +1,9 @@
 import React, { ReactElement } from "react"
 import { TinyArea } from "@ant-design/charts"
-import { ReadingRecord } from "../reducers/metric"
+import { ReadingRecord } from "../reducers/data"
 
 const TinyPreview = ({ readings }: { readings: Array<ReadingRecord> }): ReactElement => {
-  let data = readings.map((reading) => Math.round(reading.value * 100) / 100)
+  let data = readings.map((reading) => Math.round(reading.metric_value * 100) / 100)
   if (data.length < 20) {
     data = Array(20 - data.length)
       .fill(data[0])

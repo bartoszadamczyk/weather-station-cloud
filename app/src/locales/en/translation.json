@@ -1,21 +1,21 @@
 {
   "title": "Weather Station",
-  "tableColumns": {
+  "tableColumn": {
     "deviceId": "Device",
     "moduleType": "Type",
     "moduleId": "Sensor",
-    "metric": "Metric",
-    "value": "Value",
+    "metricType": "Metric",
+    "metricValue": "Value",
     "chart": "Chart"
   },
-  "moduleTypes": {
+  "moduleType": {
     "cpu": "CPU",
     "dht22": "DHT22",
     "ds18b20":  "DS18B20",
     "bme680": "BME680",
     "relay":  "RELAY"
   },
-  "metricTypes": {
+  "metricType": {
     "temperature": "TEMPERATURE",
     "humidity": "HUMIDITY",
     "pressure": "PRESSURE",
@@ -25,13 +25,13 @@
     "change": "CHANGE",
     "cleanup": "CLEANUP"
   },
-  "metricTypeColors": {
+  "metricTypeColor": {
     "temperature": "red",
     "humidity": "blue",
     "pressure": "gold",
     "gas": "purple"
   },
-  "moduleMappings": {
+  "moduleIdMapping": {
     "cpu": "cpu",
     "probe": "probe"
   }
