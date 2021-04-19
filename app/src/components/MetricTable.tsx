@@ -29,8 +29,6 @@ const useColumns = (): ColumnsType<MetricRecord> => {
       })),
     [state.data.devices]
   )
-
-  const columns: ColumnsType<MetricRecord> = useMemo(
   return useMemo(
     () => [
       {
