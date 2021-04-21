@@ -1,4 +1,4 @@
-name: Test Serverless App
+name: Test Serverless
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: Test Serverless App
+    name: Test Serverless
     runs-on: ubuntu-latest
     defaults:
       run:

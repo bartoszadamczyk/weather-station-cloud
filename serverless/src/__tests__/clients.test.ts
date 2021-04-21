@@ -12,7 +12,6 @@ import * as aws from "../aws"
 import * as Sentry from "@sentry/serverless"
 import { getConnectionRecords, sendToClients } from "../clients"
 import connectionRecordFactory from "./helpers/connectionRecordFactory"
-import { deleteRecord } from "../aws"
 
 describe("Test clients", () => {
   describe("Test connectionRecordFactory function", () => {

@@ -1,5 +1,5 @@
 import * as Sentry from "@sentry/serverless"
-import { Context, Handler, APIGatewayProxyEvent, APIGatewayProxyResult, SQSEvent, SQSHandler } from "aws-lambda"
+import { Handler, APIGatewayProxyEvent, APIGatewayProxyResult, SQSEvent, SQSHandler } from "aws-lambda"
 import { dateToTimestamp } from "./helpers"
 import { returnOk } from "./http"
 import { deleteConnectionRecord, getConnectionRecords, putConnectionRecord, sendToClients } from "./clients"

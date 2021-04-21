@@ -15,7 +15,6 @@ import connectionRecordFactory from "./helpers/connectionRecordFactory"
 import contextFactory from "./helpers/contextFactory"
 import callbackFactory from "./helpers/callbackFactory"
 import sqsRecordFactory from "./helpers/sqsRecordFactory"
-import { ActionType } from "../types/actions"
 import pongActionFactory from "./helpers/pongActionFactory"
 
 describe("Test handler", () => {
