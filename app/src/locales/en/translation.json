@@ -14,7 +14,7 @@
     "chart": "Chart"
   },
   "moduleType": {
-    "cpu": "CPU",
+    "rpi": "RPI",
     "dht22": "DHT22",
     "ds18b20":  "DS18B20",
     "bme680": "BME680",
@@ -24,7 +24,7 @@
     "temperature": "TEMPERATURE",
     "humidity": "HUMIDITY",
     "pressure": "PRESSURE",
-    "gas": "GAS",
+    "vox": "VOX",
     "init": "INIT",
     "state": "STATE",
     "change": "CHANGE",
@@ -33,8 +33,8 @@
   "metricTypeColor": {
     "temperature": "red",
     "humidity": "blue",
-    "pressure": "gold",
-    "gas": "purple"
+    "pressure": "purple",
+    "vox": "green"
   },
   "moduleIdMapping": {
     "cpu": "cpu",

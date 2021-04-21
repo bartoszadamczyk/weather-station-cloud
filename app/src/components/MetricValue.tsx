@@ -36,7 +36,7 @@ const renderMetricValue = (metricType: MetricType, metricValue: number) => {
           {`${metricValue.toFixed(0)}hPa`}
         </Space>
       )
-    case MetricType.Gas:
+    case MetricType.Vox:
       return (
         <Space size="small">
           <MdBubbleChart />

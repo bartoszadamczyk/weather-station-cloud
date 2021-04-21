@@ -14,7 +14,7 @@
     "chart": "Wykres"
   },
   "moduleType": {
-    "cpu": "PROCESOR",
+    "rpi": "MALINA",
     "dht22": "DHT22",
     "ds18b20":  "DS18B20",
     "bme680": "BME680",
@@ -24,7 +24,7 @@
     "temperature": "TEMPERATURA",
     "humidity": "WILGOTNOŚĆ",
     "pressure": "CIŚNIENIE",
-    "gas": "GAZ",
+    "vox": "VOX",
     "init": "START",
     "state": "STAN",
     "change": "ZMIANA",
