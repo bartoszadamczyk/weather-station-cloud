@@ -9,8 +9,8 @@ import { Config, Environment } from "./config"
 
 Sentry.AWSLambda.init({
   enabled: Config.Stage !== Environment.Test,
-  sampleRate: Config.SentrySampleRate ? parseFloat(Config.SentrySampleRate) : 0.0005,
-  tracesSampleRate: Config.SentryTracesSampleRate ? parseFloat(Config.SentryTracesSampleRate) : 0.0001
+  sampleRate: Config.SentrySampleRate ? parseFloat(Config.SentrySampleRate) : 0.001,
+  tracesSampleRate: Config.SentryTracesSampleRate ? parseFloat(Config.SentryTracesSampleRate) : 0.001
 })
 
 export const connectHandler: Handler = Sentry.AWSLambda.wrapHandler(

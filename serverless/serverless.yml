@@ -5,8 +5,8 @@ custom:
   applicationBaseName: ${self:service}-${self:provider.stage}
   dynamodbConnectionsTableName: ${self:custom.applicationBaseName}-connections
   dynamodbMappingsTableName: ${self:custom.applicationBaseName}-mappings
-  sentrySampleRate: 0.0005
-  sentryTracesSampleRate: 0.0001
+  sentrySampleRate: 0.001
+  sentryTracesSampleRate: 0.001
 
 plugins:
   - serverless-plugin-typescript
