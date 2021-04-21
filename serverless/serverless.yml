@@ -29,6 +29,7 @@ provider:
     DYNAMODB_CONNECTIONS_TABLE: ${self:custom.dynamodbConnectionsTableName}
     DYNAMODB_MAPPINGS_TABLE: ${self:custom.dynamodbMappingsTableName}
     SENTRY_DSN: ${ssm:${self:custom.applicationBaseName}-serverless-sentry-dsn}
+    SENTRY_ENVIRONMENT: ${self:provider.stage}
     SENTRY_SAMPLE_RATE: ${self:custom.sentrySampleRate}
     SENTRY_TRACES_SAMPLE_RATE: ${self:custom.sentryTracesSampleRate}
   tags:

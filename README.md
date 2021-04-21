@@ -1,7 +1,7 @@
 # Weather Station Cloud
 
 [![Lint App](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_app.yml/badge.svg?branch=main)](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_app.yml)
-[![Lint Serverless](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_serverless.yml/badge.svg?branch=main)](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_serverless.yml)
+[![Lint Serverless](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/test_serverless.yml/badge.svg?branch=main)](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/test_serverless.yml)
 [![Lint Terraform](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_terraform.yml/badge.svg?branch=main)](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_terraform.yml)
 [![License: MIT](https://img.shields.io/github/license/bartoszadamczyk/weather-station-cloud)](https://github.com/bartoszadamczyk/weather-station-cloud/blob/main/LICENSE)
 
@@ -11,7 +11,7 @@ Cloud based Raspberry Pi weather station
 
 - [Cloud App](https://github.com/bartoszadamczyk/weather-station-cloud)
     - [React App](https://github.com/bartoszadamczyk/weather-station-cloud/app) - Netlify, TypeScript, React, Immer,
-      WebSockets, i18next, styled-components, Sentry, ESLint GitHub Actions
+      WebSockets, i18next, Sentry, ESLint GitHub Actions
     - [Serverless API](https://github.com/bartoszadamczyk/weather-station-cloud/serverless) - Serverless, AWS API
       Gateway (with WebSockets), DynamoDB, SQS, TypeScript, AJV, Sentry, ESLint, GitHub Actions
     - [Terraform](https://github.com/bartoszadamczyk/weather-station-cloud/terraform) - Terraform, TFLint, GitHub

@@ -1,4 +1,4 @@
-name: Lint Serverless
+name: Test Serverless App
 
 on:
   push:
@@ -8,8 +8,8 @@ on:
       - '*'
 
 jobs:
-  lint:
-    name: Lint App
+  test:
+    name: Test Serverless App
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -21,3 +21,5 @@ jobs:
         run: yarn
       - name: Run ESLint
         run: yarn run lint
+      - name: Run Tests
+        run: yarn run test

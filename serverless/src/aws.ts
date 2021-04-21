@@ -1,9 +1,10 @@
-import { ApiGatewayManagementApi } from "aws-sdk"
+import { ApiGatewayManagementApi, Response } from "aws-sdk"
 import { DeleteItemCommandInput } from "@aws-sdk/client-dynamodb/commands/DeleteItemCommand"
 import { DynamoDB, QueryCommandInput, ScanCommandInput } from "@aws-sdk/client-dynamodb"
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb"
 
 import { Config } from "./config"
+import { AWSError } from "aws-sdk/lib/error"
 
 const ApiGatewayUrl = `${Config.WebsocketsApiId}.execute-api.${Config.Region}.amazonaws.com/${Config.Stage}`
 
@@ -13,8 +14,9 @@ const dynamoDB = new DynamoDB({ region: Config.Region })
 // https://github.com/aws/aws-sdk-js-v3/issues/1830
 const apiGatewayManagementApi = new ApiGatewayManagementApi({ endpoint: ApiGatewayUrl })
 
-export const postToConnection = async (connectionId: string, data: string): Promise<void> => {
-  await apiGatewayManagementApi.postToConnection({ ConnectionId: connectionId, Data: data }).promise()
+export const postToConnection = async (connectionId: string, data: string): Promise<Response<unknown, AWSError>> => {
+  const a = await apiGatewayManagementApi.postToConnection({ ConnectionId: connectionId, Data: data }).promise()
+  return a.$response
 }
 
 export const putRecord = async (dynamoDDTable: string, item: Record<string, unknown>): Promise<void> => {

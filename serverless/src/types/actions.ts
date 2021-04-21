@@ -3,7 +3,7 @@ import Ajv, { JTDSchemaType } from "ajv/dist/jtd"
 const ajv = new Ajv()
 
 export enum ModuleType {
-  CPU = "cpu",
+  RPI = "rpi",
   DHT22 = "dht22",
   DS18B20 = "ds18b20",
   BME680 = "bme680",
@@ -14,11 +14,8 @@ export enum MetricType {
   Temperature = "temperature",
   Humidity = "humidity",
   Pressure = "pressure",
-  Gas = "gas",
-  Init = "init",
-  State = "state",
-  Change = "change",
-  Cleanup = "cleanup"
+  Vox = "vox",
+  State = "state"
 }
 
 export enum ActionType {

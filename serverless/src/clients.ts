@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/serverless"
 import { deleteRecord, postToConnection, putRecord, scanRecords } from "./aws"
 import { Config } from "./config"
 import { ConnectionRecord, connectionRecordValidator } from "./types/connections"
@@ -15,17 +16,31 @@ export const deleteConnectionRecord = async (connectionId: string): Promise<void
   await deleteRecord(Config.DynamoDBConnectionsTable, { connectionId })
 }
 
-export const sendToClients = async (data: string): Promise<void> => {
-  const connections = await getConnectionRecords()
-  for (const { connectionId } of connections) {
-    try {
-      await postToConnection(connectionId, data)
-    } catch (e) {
-      if (e.statusCode === 410) {
-        console.log(`Found stale connection, deleting ${connectionId}`)
-        return await deleteConnectionRecord(connectionId)
-      }
-      console.log(e)
+const sendToClient = async (connection: ConnectionRecord, data: string) => {
+  try {
+    return await postToConnection(connection.connectionId, data)
+  } catch (e) {
+    if (e.statusCode === 410) {
+      Sentry.captureMessage(`Found stale connection, deleting ${connection.connectionId}`)
+      await deleteConnectionRecord(connection.connectionId)
+      return e
     }
+    Sentry.captureException(e)
+    return e
   }
+}
+
+export const sendToClients = async (
+  connections: Array<ConnectionRecord>,
+  data: string
+): Promise<Array<ConnectionRecord>> => {
+  const responsesWithConnections = await Promise.all(
+    connections.map(async (connection) => ({
+      connection,
+      response: await sendToClient(connection, data)
+    }))
+  )
+  return responsesWithConnections
+    .filter(({ response }) => response.statusCode !== 410)
+    .map(({ connection }) => connection)
 }

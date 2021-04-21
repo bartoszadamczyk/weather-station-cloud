@@ -11,7 +11,7 @@ export const returnOk = (body = "Ok"): ReturnType => {
   return returnCustom(200, body)
 }
 
-export const returnOkJSON = (body: unknown = "Ok"): ReturnType => {
+export const returnOkJSON = (body: unknown): ReturnType => {
   return returnOk(JSON.stringify(body))
 }
 
@@ -29,6 +29,10 @@ export const returnForbidden = (body = "Forbidden"): ReturnType => {
 
 export const returnNotFound = (body = "Not Found"): ReturnType => {
   return returnCustom(404, body)
+}
+
+export const returnGone = (body = "Gone"): ReturnType => {
+  return returnCustom(410, body)
 }
 
 export const returnInternalServerError = (body = "Internal Server Error"): ReturnType => {

@@ -1,20 +1,17 @@
 import * as Sentry from "@sentry/serverless"
-import { Handler, APIGatewayProxyEvent, APIGatewayProxyResult, SQSEvent, SQSHandler } from "aws-lambda"
+import { Context, Handler, APIGatewayProxyEvent, APIGatewayProxyResult, SQSEvent, SQSHandler } from "aws-lambda"
 import { dateToTimestamp } from "./helpers"
 import { returnOk } from "./http"
-import { deleteConnectionRecord, putConnectionRecord, sendToClients } from "./clients"
+import { deleteConnectionRecord, getConnectionRecords, putConnectionRecord, sendToClients } from "./clients"
 import { ActionType, actionSerializer, actionParser } from "./types/actions"
 import { enrichLiveReadingAction } from "./actions"
-import { Config } from "./config"
+import { Config, Environment } from "./config"
 
-if (Config.SentryDsn) {
-  Sentry.AWSLambda.init({
-    dsn: Config.SentryDsn,
-    environment: Config.Stage,
-    sampleRate: Config.SentrySampleRate,
-    tracesSampleRate: Config.SentryTracesSampleRate
-  })
-}
+Sentry.AWSLambda.init({
+  enabled: Config.Stage !== Environment.Test,
+  sampleRate: Config.SentrySampleRate ? parseFloat(Config.SentrySampleRate) : 0.0005,
+  tracesSampleRate: Config.SentryTracesSampleRate ? parseFloat(Config.SentryTracesSampleRate) : 0.0001
+})
 
 export const connectHandler: Handler = Sentry.AWSLambda.wrapHandler(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -44,12 +41,13 @@ export const pingHandler: Handler = Sentry.AWSLambda.wrapHandler(
 
 export const dataHandler: SQSHandler = Sentry.AWSLambda.wrapHandler(
   async (event: SQSEvent): Promise<void> => {
+    let connections = await getConnectionRecords()
     for (const record of event.Records) {
       const action = actionParser(record.body)
       if (action) {
         switch (action.action) {
           case ActionType.LiveReading:
-            await sendToClients(actionSerializer(await enrichLiveReadingAction(action)))
+            connections = await sendToClients(connections, actionSerializer(await enrichLiveReadingAction(action)))
             break
           case ActionType.Pong:
             break
