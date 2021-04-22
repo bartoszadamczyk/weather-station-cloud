@@ -1,9 +1,9 @@
-export const getEnvVar = (name: string): string | undefined => {
+export const getOptionalEnvironmentVariable = (name: string): string | undefined => {
   return process.env[name]
 }
 
-export const getReqEnvVar = (name: string): string => {
-  const envVar = getEnvVar(name)
+export const getRequiredEnvironmentVariable = (name: string): string => {
+  const envVar = getOptionalEnvironmentVariable(name)
   if (!envVar) throw new Error(`Missing env var: ${name}`)
   return envVar
 }

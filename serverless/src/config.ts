@@ -1,4 +1,4 @@
-import { getEnvVar, getReqEnvVar } from "./helpers"
+import { getOptionalEnvironmentVariable, getRequiredEnvironmentVariable } from "./helper"
 
 export enum Environment {
   Production = "production",
@@ -7,11 +7,11 @@ export enum Environment {
 }
 
 export const Config = {
-  Stage: getReqEnvVar("STAGE"),
-  Region: getReqEnvVar("REGION"),
-  WebsocketsApiId: getReqEnvVar("WEBSOCKETS_API_ID"),
-  DynamoDBConnectionsTable: getReqEnvVar("DYNAMODB_CONNECTIONS_TABLE"),
-  DynamoDBMappingsTable: getReqEnvVar("DYNAMODB_MAPPINGS_TABLE"),
-  SentrySampleRate: getEnvVar("SENTRY_SAMPLE_RATE"),
-  SentryTracesSampleRate: getEnvVar("SENTRY_TRACES_SAMPLE_RATE")
+  Stage: getRequiredEnvironmentVariable("STAGE"),
+  Region: getRequiredEnvironmentVariable("REGION"),
+  WebsocketsApiId: getRequiredEnvironmentVariable("WEBSOCKETS_API_ID"),
+  DynamoDBConnectionsTable: getRequiredEnvironmentVariable("DYNAMODB_CONNECTIONS_TABLE"),
+  DynamoDBMappingsTable: getRequiredEnvironmentVariable("DYNAMODB_MAPPINGS_TABLE"),
+  SentrySampleRate: getOptionalEnvironmentVariable("SENTRY_SAMPLE_RATE"),
+  SentryTracesSampleRate: getOptionalEnvironmentVariable("SENTRY_TRACES_SAMPLE_RATE")
 }
