@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react"
-import { MetricType } from "../types/actions"
+import { MetricType } from "../../types/event"
 import { Space } from "antd"
 import {
   BiArrowFromBottom,
@@ -48,10 +48,10 @@ const renderMetricValue = (metricType: MetricType, metricValue: number) => {
   }
 }
 
-const MetricValue = ({ metric, value }: { metric: MetricType; value: number }): ReactElement => {
+const MetricValue = ({ metricType, metricValue }: { metricType: MetricType; metricValue: number }): ReactElement => {
   return (
     <div className="MetricValue">
-      <Space size="small">{renderMetricValue(metric, value)}</Space>
+      <Space size="small">{renderMetricValue(metricType, metricValue)}</Space>
     </div>
   )
 }

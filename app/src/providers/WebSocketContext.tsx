@@ -2,11 +2,11 @@ import React, { createContext, ReactElement, useCallback, useContext, useEffect,
 
 import { useWebSocketWithHeartbeat } from "../hooks/useWebSocketWithHeartbeat"
 import { AppContext } from "./AppContext"
-import { ActionSchemaType, actionParser, actionSerializer, ActionType } from "../types/actions"
+import { Event, parseEvent, serializeEvent, EventType } from "../types/event"
 import { Actions } from "../reducers"
 
 export const WebSocketContext = createContext<{
-  sendAction: (sendMessage: ActionSchemaType) => void
+  sendAction: (sendMessage: Event) => void
   close: () => void
   open: () => void
 }>({
@@ -15,14 +15,19 @@ export const WebSocketContext = createContext<{
   open: () => undefined
 })
 
-const dispatchWebSocketAction = (dispatch: React.Dispatch<Actions>, action: ActionSchemaType) => {
-  switch (action.action) {
-    case ActionType.LiveReading:
-      dispatch({
+const dispatchWebSocketAction = (dispatch: React.Dispatch<Actions>, data: string) => {
+  const action = parseEvent(data)
+  if (!action) return
+  createWebSocketAction(action)
+}
+
+const createWebSocketAction = (action: Event): Actions | undefined => {
+  switch (action.eventType) {
+    case EventType.LiveReading:
+      return {
         type: "NEW_LIVE_METRIC",
         ...action
-      })
-      break
+      }
   }
 }
 
@@ -37,10 +42,7 @@ export const WebSocketProvider = ({
 
   const onMessage = useCallback(
     (messageEvent: MessageEvent) => {
-      if (!messageEvent.data) return
-      const action = actionParser(messageEvent.data)
-      if (!action) return
-      dispatchWebSocketAction(dispatch, action)
+      dispatchWebSocketAction(dispatch, messageEvent.data)
     },
     [dispatch]
   )
@@ -51,8 +53,8 @@ export const WebSocketProvider = ({
   )
 
   const sendAction = useCallback(
-    (action: ActionSchemaType) => {
-      send(actionSerializer(action))
+    (action: Event) => {
+      send(serializeEvent(action))
     },
     [send]
   )

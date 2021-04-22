@@ -1,8 +1,8 @@
 import React, { ReactElement } from "react"
 import { useTranslation } from "react-i18next"
 import { Typography } from "antd"
-import LanguagePicker from "./LanguagePicker"
-import logo from "../assets/weather-logo.svg"
+import LanguagePicker from "../LanguagePicker"
+import logo from "../../assets/weather-logo.svg"
 
 const { Title } = Typography
 import "./AppHeader.scss"

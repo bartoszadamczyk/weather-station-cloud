@@ -1,12 +1,12 @@
 import React, { ReactElement, Suspense } from "react"
 import { Spin, Typography } from "antd"
 import "antd/dist/antd.css"
-import "../helpers/i18n"
+import "../../helpers/i18n"
 import AppUI from "./AppUI"
-import FullPageWrapper from "./FullPageWrapper"
-import { AppContextProvider } from "../providers/AppContext"
-import { WebSocketProvider } from "../providers/WebSocketContext"
-import { Config } from "../helpers/config"
+import FullPageWrapper from "../FullPageWrapper"
+import { AppContextProvider } from "../../providers/AppContext"
+import { WebSocketProvider } from "../../providers/WebSocketContext"
+import { Config } from "../../helpers/config"
 
 const Loader = () => (
   <div className="Loader">
@@ -24,7 +24,7 @@ const MissingWebSocketUrlError = () => (
   </div>
 )
 
-const AppData = (): ReactElement => {
+const App = (): ReactElement => {
   return (
     <AppContextProvider>
       {Config.WebSocketUrl ? (
@@ -40,4 +40,4 @@ const AppData = (): ReactElement => {
   )
 }
 
-export default AppData
+export default App
