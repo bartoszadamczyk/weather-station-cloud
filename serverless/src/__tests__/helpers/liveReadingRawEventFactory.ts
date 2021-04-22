@@ -1,8 +1,8 @@
 import * as faker from "faker"
-import { ActionType, LiveReadingAction, MetricType, ModuleType } from "../../types/actions"
+import { EventType, LiveReadingRawEvent, MetricType, ModuleType } from "../../types/event"
 
-export default (o: Partial<LiveReadingAction> = {}): LiveReadingAction => ({
-  action: ActionType.LiveReading,
+export default (o: Partial<LiveReadingRawEvent> = {}): LiveReadingRawEvent => ({
+  event_type: EventType.LiveReading,
   device_id: faker.datatype.string(),
   created_on: faker.time.recent("unix"),
   module_type: faker.random.arrayElement(Object.values(ModuleType)),

@@ -63,8 +63,8 @@ functions:
       - websocket:
           route: ping
           routeResponseSelectionExpression: $default
-  dataHandler:
-    handler: src/handler.dataHandler
+  eventHandler:
+    handler: src/handler.eventHandler
     events:
       - sqs:
           arn: ${ssm:${self:custom.applicationBaseName}-data-sqs-arn}

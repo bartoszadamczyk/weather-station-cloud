@@ -7,11 +7,11 @@ chai.should()
 chai.use(sinonChai)
 
 import * as aws from "../aws"
-import { getMappingRecord } from "../mappings"
+import { getMappingRecord } from "../mapping"
 import mappingFactory from "./helpers/mappingFactory"
 
-describe("Test mappings", () => {
-  describe("Test safeObjectAsyncLoop function", () => {
+describe("Test mapping", () => {
+  describe("Test getMappingRecord function", () => {
     let getRecordStub: sinon.SinonStub
 
     beforeEach(function () {
@@ -22,7 +22,7 @@ describe("Test mappings", () => {
       getRecordStub.restore()
     })
 
-    it("should work when object exists", async () => {
+    it("should work when object exists in db", async () => {
       const example = mappingFactory()
       getRecordStub.resolves([example])
       const result = await getMappingRecord(example.deviceId, example.moduleId)
@@ -30,7 +30,7 @@ describe("Test mappings", () => {
       expect(result).to.be.equal(example)
     })
 
-    it("should work without moduleId", async () => {
+    it("should default moduleId to device", async () => {
       const example = mappingFactory({ moduleId: "device" })
       getRecordStub.resolves([example])
       const result = await getMappingRecord(example.deviceId)
@@ -41,7 +41,7 @@ describe("Test mappings", () => {
       expect(result).to.be.equal(example)
     })
 
-    it("should work when object is missing", async () => {
+    it("should work when object is missing in db", async () => {
       const example = mappingFactory()
       getRecordStub.resolves([])
       const result = await getMappingRecord(example.deviceId, example.moduleId)
@@ -49,7 +49,7 @@ describe("Test mappings", () => {
       expect(result).to.be.undefined
     })
 
-    it("should work when there is more than one object in db", async () => {
+    it("should use first object in db", async () => {
       // This should not happen in DynamoDB, but just in case
       const examples = [mappingFactory(), mappingFactory()]
       getRecordStub.resolves(examples)
@@ -58,7 +58,7 @@ describe("Test mappings", () => {
       expect(result).to.be.equal(examples[0])
     })
 
-    it("should work when object has missing properties", async () => {
+    it("should skipp objects with missing properties", async () => {
       const examples = [{ deviceId: "foo", moduleId: "bar" }, mappingFactory()]
       getRecordStub.resolves(examples)
       const result = await getMappingRecord(examples[0].deviceId, examples[0].moduleId)
@@ -66,7 +66,7 @@ describe("Test mappings", () => {
       expect(result).to.be.equal(examples[1])
     })
 
-    it("should work when object has more properties", async () => {
+    it("should work when object in db has more properties", async () => {
       const examples = [{ ...mappingFactory(), foo: "bar" }, mappingFactory()]
       getRecordStub.resolves(examples)
       const result = await getMappingRecord(examples[0].deviceId, examples[0].moduleId)

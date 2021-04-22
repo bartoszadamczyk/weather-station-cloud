@@ -1,10 +1,8 @@
 import * as Sentry from "@sentry/serverless"
 import { Handler, APIGatewayProxyEvent, APIGatewayProxyResult, SQSEvent, SQSHandler } from "aws-lambda"
-import { dateToTimestamp } from "./helpers"
-import { returnOk } from "./http"
-import { deleteConnectionRecord, getConnectionRecords, putConnectionRecord, sendToClients } from "./clients"
-import { ActionType, actionSerializer, actionParser } from "./types/actions"
-import { enrichLiveReadingAction } from "./actions"
+import { returnOk, returnOkJSON } from "./http"
+import { deleteConnectionRecord, putConnectionRecord } from "./client"
+import { handleEvent } from "./event"
 import { Config, Environment } from "./config"
 
 Sentry.AWSLambda.init({
@@ -31,28 +29,16 @@ export const disconnectHandler: Handler = Sentry.AWSLambda.wrapHandler(
 
 export const pingHandler: Handler = Sentry.AWSLambda.wrapHandler(
   async (): Promise<APIGatewayProxyResult> => {
-    const response = {
-      action: ActionType.Pong as const,
-      server_time: dateToTimestamp(new Date())
-    }
-    return returnOk(actionSerializer(response))
+    const response = { action: "pong" }
+    return returnOkJSON(response)
   }
 )
 
-export const dataHandler: SQSHandler = Sentry.AWSLambda.wrapHandler(
+export const eventHandler: SQSHandler = Sentry.AWSLambda.wrapHandler(
   async (event: SQSEvent): Promise<void> => {
-    let connections = await getConnectionRecords()
+    let connections
     for (const record of event.Records) {
-      const action = actionParser(record.body)
-      if (action) {
-        switch (action.action) {
-          case ActionType.LiveReading:
-            connections = await sendToClients(connections, actionSerializer(await enrichLiveReadingAction(action)))
-            break
-          case ActionType.Pong:
-            break
-        }
-      }
+      connections = await handleEvent(connections, record.body)
     }
   }
 )

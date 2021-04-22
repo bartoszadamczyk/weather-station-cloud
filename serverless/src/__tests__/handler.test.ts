@@ -6,16 +6,15 @@ import sinonChai from "sinon-chai"
 chai.should()
 chai.use(sinonChai)
 
-import * as actions from "../actions"
-import * as clients from "../clients"
-import { connectHandler, dataHandler, disconnectHandler, pingHandler } from "../handler"
-import liveReadingActionFactory from "./helpers/liveReadingActionFactory"
+import * as event from "../event"
+import * as clients from "../client"
 import { returnOk } from "../http"
-import connectionRecordFactory from "./helpers/connectionRecordFactory"
+import { connectHandler, eventHandler, disconnectHandler, pingHandler } from "../handler"
 import contextFactory from "./helpers/contextFactory"
 import callbackFactory from "./helpers/callbackFactory"
 import sqsRecordFactory from "./helpers/sqsRecordFactory"
-import pongActionFactory from "./helpers/pongActionFactory"
+import connectionRecordFactory from "./helpers/connectionRecordFactory"
+import liveReadingRawEventFactory from "./helpers/liveReadingRawEventFactory"
 
 describe("Test handler", () => {
   describe("Test connectHandler function", () => {
@@ -66,96 +65,47 @@ describe("Test handler", () => {
     it("should return pong msg", async () => {
       const result = await pingHandler({}, contextFactory(), callbackFactory())
       expect(result.statusCode).to.be.equal(200)
-      expect(JSON.parse(result.body).action).to.be.eql("pong")
+      expect(JSON.parse(result.body)).to.be.eql({ action: "pong" })
     })
   })
 
-  describe("Test dataHandler function", () => {
-    let getConnectionRecordsStub: sinon.SinonStub
-    let sendToClientsStub: sinon.SinonStub
-    let enrichLiveReadingActionStub: sinon.SinonStub
+  describe("Test eventHandler function", () => {
+    let handleEventStub: sinon.SinonStub
 
     beforeEach(function () {
-      getConnectionRecordsStub = sinon.stub(clients, "getConnectionRecords")
-      sendToClientsStub = sinon.stub(clients, "sendToClients")
-      enrichLiveReadingActionStub = sinon.stub(actions, "enrichLiveReadingAction")
+      handleEventStub = sinon.stub(event, "handleEvent")
     })
 
     afterEach(function () {
-      getConnectionRecordsStub.restore()
-      sendToClientsStub.restore()
-      enrichLiveReadingActionStub.restore()
+      handleEventStub.restore()
     })
 
-    it("should not send to client if no records", async () => {
-      const connections = connectionRecordFactory()
-      getConnectionRecordsStub.resolves(connections)
-      sendToClientsStub.returnsArg(0)
-      enrichLiveReadingActionStub.returnsArg(0)
+    it("should work for no records", async () => {
+      handleEventStub.returnsArg(0)
       const event = { Records: [] }
-      await dataHandler(event, contextFactory(), callbackFactory())
-      getConnectionRecordsStub.should.have.been.calledOnce
-      sendToClientsStub.should.have.not.been.called
-      enrichLiveReadingActionStub.should.have.not.been.called
+      await eventHandler(event, contextFactory(), callbackFactory())
+      handleEventStub.should.have.not.been.called
     })
 
-    it("should send to client correct record", async () => {
-      const connections = connectionRecordFactory()
-      getConnectionRecordsStub.resolves(connections)
-      sendToClientsStub.returnsArg(0)
-      enrichLiveReadingActionStub.returnsArg(0)
+    it("should work for one record", async () => {
       const event = {
-        Records: [sqsRecordFactory(liveReadingActionFactory())]
+        Records: [sqsRecordFactory(liveReadingRawEventFactory())]
       }
-      await dataHandler(event, contextFactory(), callbackFactory())
-      getConnectionRecordsStub.should.have.been.calledOnce
-      sendToClientsStub.should.have.been.calledOnce
-      enrichLiveReadingActionStub.should.have.been.calledOnce
+      handleEventStub.returnsArg(0)
+      await eventHandler(event, contextFactory(), callbackFactory())
+      handleEventStub.should.have.been.calledOnceWith(undefined, event.Records[0].body)
     })
 
-    it("should send to client correct records", async () => {
-      const connections = connectionRecordFactory()
-      getConnectionRecordsStub.resolves(connections)
-      sendToClientsStub.returnsArg(0)
-      enrichLiveReadingActionStub.returnsArg(0)
+    it("should work for more than one record", async () => {
+      const connections = [connectionRecordFactory()]
       const event = {
-        Records: [sqsRecordFactory(liveReadingActionFactory()), sqsRecordFactory(liveReadingActionFactory())]
+        Records: [sqsRecordFactory(liveReadingRawEventFactory()), sqsRecordFactory(liveReadingRawEventFactory())]
       }
-      await dataHandler(event, contextFactory(), callbackFactory())
-      getConnectionRecordsStub.should.have.been.calledOnce
-      sendToClientsStub.should.have.been.calledTwice
-      enrichLiveReadingActionStub.should.have.been.calledTwice
-    })
-
-    it("should not send to client for pong action type", async () => {
-      const connections = connectionRecordFactory()
-      getConnectionRecordsStub.resolves(connections)
-      sendToClientsStub.returnsArg(0)
-      enrichLiveReadingActionStub.returnsArg(0)
-      const event = {
-        Records: [sqsRecordFactory(liveReadingActionFactory()), sqsRecordFactory(pongActionFactory())]
-      }
-      await dataHandler(event, contextFactory(), callbackFactory())
-      getConnectionRecordsStub.should.have.been.calledOnce
-      sendToClientsStub.should.have.been.calledOnce
-      enrichLiveReadingActionStub.should.have.been.calledOnce
-    })
-
-    it("should not send to client wrong records", async () => {
-      const connections = connectionRecordFactory()
-      getConnectionRecordsStub.resolves(connections)
-      sendToClientsStub.returnsArg(0)
-      enrichLiveReadingActionStub.returnsArg(0)
-      const event = {
-        Records: [
-          sqsRecordFactory(liveReadingActionFactory()),
-          sqsRecordFactory({ ...liveReadingActionFactory(), module_type: "foo" })
-        ]
-      }
-      await dataHandler(event, contextFactory(), callbackFactory())
-      getConnectionRecordsStub.should.have.been.calledOnce
-      sendToClientsStub.should.have.been.calledOnce
-      enrichLiveReadingActionStub.should.have.been.calledOnce
+      handleEventStub.resolves(connections)
+      await eventHandler(event, contextFactory(), callbackFactory())
+      handleEventStub.should.have.been.calledTwice
+      handleEventStub.should.have.been.calledWith(undefined, event.Records[0].body)
+      handleEventStub.should.have.been.calledWith(connections, event.Records[1].body)
     })
   })
 })

@@ -7,7 +7,7 @@ import sinonChai from "sinon-chai"
 chai.should()
 chai.use(sinonChai)
 
-import { safeObjectAsyncLoop, sortBy, dateToString, dateToTimestamp } from "../helpers"
+import { safeObjectAsyncLoop, sortBy, dateToString, dateToTimestamp } from "../helper"
 import { describe } from "mocha"
 
 describe("Test helpers", () => {

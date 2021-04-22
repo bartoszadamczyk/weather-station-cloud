@@ -1,5 +1,5 @@
 import * as faker from "faker"
-import { MappingRecord } from "../../types/mappings"
+import { MappingRecord } from "../../types/mapping"
 
 export default (o: Partial<MappingRecord> = {}): MappingRecord => ({
   deviceId: faker.datatype.string(),

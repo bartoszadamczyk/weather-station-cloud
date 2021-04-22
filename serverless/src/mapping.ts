@@ -1,6 +1,6 @@
 import { getRecord } from "./aws"
 import { Config } from "./config"
-import { DeviceSortKey, MappingRecord, mappingRecordValidator } from "./types/mappings"
+import { DeviceSortKey, MappingRecord, mappingRecordValidator } from "./types/mapping"
 
 export const getMappingRecord = async (deviceId: string, moduleId: string = DeviceSortKey): Promise<MappingRecord> => {
   const condition = "deviceId = :deviceId AND moduleId = :moduleId"
