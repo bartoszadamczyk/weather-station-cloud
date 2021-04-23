@@ -13,13 +13,14 @@ Cloud based Raspberry Pi weather station
     - [React App](https://github.com/bartoszadamczyk/weather-station-cloud/app) Frontend React app that displays live
       readings. Stack: `Netlify`, `TypeScript`, `React`, `Immer`, `WebSockets`, `i18next`, `antd`, `Sentry`, `Jest`,
       `ESLint`, `GitHub Actions`
-    - [Serverless API](https://github.com/bartoszadamczyk/weather-station-cloud/serverless) - Serverless API bundled
-      with Serverless and hosted on AWS Lambda. Stack: `Serverless`, `TypeScript`, `DynamoDB`, `SQS`,
+    - [Serverless API](https://github.com/bartoszadamczyk/weather-station-cloud/serverless) Serverless API bundled with
+      Serverless and hosted on AWS Lambda. Stack: `Serverless`, `TypeScript`, `DynamoDB`, `SQS`, 
       `AWS API Gateway (with WebSockets)`, `AJV`, `Sentry`, `Mocha`, `Chai`, `Sinon`, `ESLint`, `GitHub Actions`
-    - [Terraform](https://github.com/bartoszadamczyk/weather-station-cloud/terraform) - `Terraform`, `TFLint`
-      , `GitHub Actions`
-- [Raspberry Pi](https://github.com/bartoszadamczyk/weather-station-rpi) - `Raspberry Pi`, `Linux`, `balena.io`,
-  `Docker`, `Python`, `AsyncIO`, `SQS`, `Mypy`, `Black`, `Flake8`, `Sentry` and `GitHub Actions`
+    - [Terraform](https://github.com/bartoszadamczyk/weather-station-cloud/terraform) Stack: `Terraform`, `TFLint`, 
+      `GitHub Actions`
+- [Raspberry Pi](https://github.com/bartoszadamczyk/weather-station-rpi) Raspberry Pi worker deployed with balena.io.
+  Stack `Raspberry Pi`, `Linux`, `balena.io`, `Docker`, `Python`, `AsyncIO`, `SQS`, `Mypy`, `Black`, `Flake8`, `Sentry`
+  and `GitHub Actions`
 
 ![Frontend App](docs/app-screenshot.png)
 
@@ -70,3 +71,61 @@ by a serverless teardown or updates.
 > application, as they’re probably referenced by many applications in your stack. Those more persistent pieces of
 > infrastructure will generally be managed outside of your deploy pipeline.
 [[Source](https://www.serverless.com/blog/definitive-guide-terraform-serverless)]
+
+
+## Deployment
+
+### Warning!!! Depending on the number of devices and sensors AWS cost can exceed your free tier!!!
+
+1. Fork and clone this repo
+2. You need:
+    - AWS account
+    - AWS CLI installed and configured on your computer
+    - Terraform installed (`brew install terraform`)
+    - Node.js installed (`brew install n`)
+    - Netlify account
+    - [Optional] Terraform account
+    - [Optional] Sentry account (one sentry_dsn per app)
+
+### Terraform
+
+1. Enter terraform folder (`cd terraform`)
+1. Edit `backend`, `region` and `locals` in `main.tf`
+2. You can use terraform backend or store the state locally
+3. Run `terraform apply` to deploy your infrastructure
+4. Create AWS user for your Raspberry Pi and assign `rpi` group created with Terraform.
+
+### Serverless App
+
+1. Enter serverless folder (`cd serverless`)
+2. Edit `service` and `deploymentBucket` - this property optional
+3. [Optional] You can store sentry DSN in AWS parameter store as `weather-station-serverless-sentry-dsn`
+4. Run `yarn`
+5. To deploy, run `yarn run deploy`
+6. Note `websocket url`
+
+### Frontend App
+
+1. Login to `Netlify`
+2. Create new app with the code from your repo with:
+    - Build settings:
+        - Base directory: `app`
+        - Build command: `yarn build`
+        - Publish directory: `app/build`
+    - Environment variables:
+        - REACT_APP_WEBSOCKET_URL: url from the serverless log
+        - [Optional] REACT_APP_SENTRY_DSN: your_sentry_dsn
+
+## Backlog
+
+- [x] End to end MVP
+- [ ] More frontend tests
+- [ ] Move types and ajv validators to separate repo and pre compile. For they are symlinked between `serverless`
+  and `app`
+- [ ] Send live data only when there is active client (requires websocket in RPi app)
+- [ ] More charts and compare
+- [ ] Historic data (aggregated)
+- [ ] Authentication
+- [ ] Implement alarms
+- [ ] Relays remote control
+
