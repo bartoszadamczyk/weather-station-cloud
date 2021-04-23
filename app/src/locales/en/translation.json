@@ -16,19 +16,20 @@
   "moduleType": {
     "rpi": "RPI",
     "dht22": "DHT22",
-    "ds18b20":  "DS18B20",
+    "ds18b20": "DS18B20",
     "bme680": "BME680",
-    "relay":  "RELAY"
+    "relay": "RELAY"
+  },
+  "moduleIdMapping": {
+    "cpu": "cpu",
+    "probe": "probe"
   },
   "metricType": {
     "temperature": "TEMPERATURE",
     "humidity": "HUMIDITY",
     "pressure": "PRESSURE",
     "vox": "VOX",
-    "init": "INIT",
-    "state": "STATE",
-    "change": "CHANGE",
-    "cleanup": "CLEANUP"
+    "state": "STATE"
   },
   "metricTypeColor": {
     "temperature": "red",
@@ -36,8 +37,8 @@
     "pressure": "purple",
     "vox": "green"
   },
-  "moduleIdMapping": {
-    "cpu": "cpu",
-    "probe": "probe"
+  "metricValue": {
+    "stateOn": "ON",
+    "stateOff": "OFF"
   }
 }

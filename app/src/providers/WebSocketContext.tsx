@@ -16,9 +16,11 @@ export const WebSocketContext = createContext<{
 })
 
 const dispatchWebSocketAction = (dispatch: React.Dispatch<Actions>, data: string) => {
-  const action = parseEvent(data)
+  const event = parseEvent(data)
+  if (!event) return
+  const action = createWebSocketAction(event)
   if (!action) return
-  createWebSocketAction(action)
+  dispatch(action)
 }
 
 const createWebSocketAction = (action: Event): Actions | undefined => {

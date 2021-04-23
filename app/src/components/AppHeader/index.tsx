@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react"
 import { useTranslation } from "react-i18next"
 import { Typography } from "antd"
-import LanguagePicker from "../LanguagePicker"
+import LanguagePicker from "./LanguagePicker"
 import logo from "../../assets/weather-logo.svg"
 
 const { Title } = Typography
@@ -12,8 +12,8 @@ const AppHeader = (): ReactElement => {
   return (
     <div className="AppHeader">
       <div className="Logo">
-        <img alt={t("logoTitle" as const)} src={logo} />
-        <Title>{t("title" as const)}</Title>
+        <img alt={t("logoTitle")} src={logo} />
+        <Title>{t("title")}</Title>
       </div>
       <div className="Lang">
         <LanguagePicker />

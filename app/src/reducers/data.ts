@@ -1,4 +1,4 @@
-import { findById, getKey, getLastValue, getLastValues, sortBy } from "../helpers/misc"
+import { findById, getKey, getLastValue, getLastValues, sortBy } from "../helpers"
 import { Actions } from "./index"
 import { ModuleType, MetricType, LiveReadingEvent } from "../types/event"
 
@@ -38,7 +38,7 @@ export const handleNewLiveMetric = (draft: DataState, action: NewLiveMetricActio
   const { createdOn, metricValue } = action
   const reading = { createdOn, metricValue }
   const metricId = getKey(action, ["deviceId", "moduleId", "metricType"])
-  const metric = findById(draft.metrics, metricId)
+  const metric = findById(draft.metrics, metricId, "metricId")
   if (metric) {
     metric.recentValues = sortBy(getLastValues(metric.recentValues.concat(reading), 50), "createdOn")
     metric.metricValue = getLastValue(metric.recentValues).metricValue

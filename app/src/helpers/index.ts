@@ -19,4 +19,21 @@ export function getLastValue<T extends GenericRecord>(array: Array<T>): T {
   return getLastValues(array, 1)[0]
 }
 
-export const getKey = <R>(obj: R, keys: Array<keyof R>) => keys.map((key) => obj[key]).join("_")
+export const getKey = <T>(obj: T, keys: Array<keyof T>): string => keys.map((key) => obj[key]).join("_")
+
+export const groupBy = <
+  S extends keyof T,
+  K extends string | symbol | number,
+  T extends Record<S, K>,
+  U extends Record<T[S], Array<T>>
+>(
+  array: Array<T>,
+  keyName: S
+): U => {
+  return array.reduce((index, curr) => {
+    const keyValue = curr[keyName]
+    index[keyValue] = index[keyValue] || []
+    index[keyValue].push(curr)
+    return index
+  }, {} as U)
+}
