@@ -9,7 +9,7 @@ const ApiGatewayUrl = `${Config.WebsocketsApiId}.execute-api.${Config.Region}.am
 
 const dynamoDB = new DynamoDB({ region: Config.Region })
 
-// For now using sdk-v2 until the bug is fixed
+// For now using sdk-v2 until the bug is fixed, remove as soon as possible
 // https://github.com/aws/aws-sdk-js-v3/issues/1830
 const apiGatewayManagementApi = new ApiGatewayManagementApi({ endpoint: ApiGatewayUrl })
 

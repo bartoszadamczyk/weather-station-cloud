@@ -1,19 +1,19 @@
-name: Test Serverless
+name: Test Frontend App
 
 on:
   push:
     paths:
-      - 'serverless/**'
+      - 'app/**'
     branches:
       - '*'
 
 jobs:
   test:
-    name: Test Serverless
+    name: Test Frontend App
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./serverless
+        working-directory: ./app
     steps:
       - name: Checkout source code
         uses: actions/checkout@main

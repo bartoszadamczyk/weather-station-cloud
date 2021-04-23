@@ -1,7 +1,7 @@
 # Weather Station Cloud
 
-[![Test App](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/test_app.yml/badge.svg?branch=main)](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/test_app.yml)
-[![Lint Serverless](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/test_serverless.yml/badge.svg?branch=main)](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/test_serverless.yml)
+[![Test App](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/test_fronted_app.yml/badge.svg?branch=main)](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/test_fronted_app.yml)
+[![Lint Serverless](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/test_serverless_app.yml/badge.svg?branch=main)](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/test_serverless_app.yml)
 [![Lint Terraform](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_terraform.yml/badge.svg?branch=main)](https://github.com/bartoszadamczyk/weather-station-cloud/actions/workflows/lint_terraform.yml)
 [![License: MIT](https://img.shields.io/github/license/bartoszadamczyk/weather-station-cloud)](https://github.com/bartoszadamczyk/weather-station-cloud/blob/main/LICENSE)
 
