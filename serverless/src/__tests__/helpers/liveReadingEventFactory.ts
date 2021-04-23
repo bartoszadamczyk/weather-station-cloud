@@ -4,7 +4,7 @@ import { EventType, LiveReadingEvent, MetricType, ModuleType } from "../../types
 export default (o: Partial<LiveReadingEvent> = {}): LiveReadingEvent => ({
   eventType: EventType.LiveReading,
   deviceId: faker.datatype.string(),
-  createdOn: faker.time.recent("unix"),
+  createdOn: faker.date.recent(),
   moduleType: faker.random.arrayElement(Object.values(ModuleType)),
   moduleId: faker.datatype.string(),
   metricType: faker.random.arrayElement(Object.values(MetricType)),
