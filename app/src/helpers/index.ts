@@ -1,3 +1,4 @@
+// Cool TS hacks..
 // type NotEmptyArray<T> = [T, ...T[]]
 // <R,> in jsx
 
