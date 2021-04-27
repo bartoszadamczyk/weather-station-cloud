@@ -12,7 +12,7 @@ export const webSocketInitialState: WebSocketState = {
   isClosed: false
 }
 
-type WebSocketStateUpdateAction = {
+export type WebSocketStateUpdateAction = {
   type: "WEB_SOCKET_STATE_UPDATE"
   isConnected: boolean
   isReconnecting: boolean

@@ -1,4 +1,4 @@
-import { findById, getKey, getLastValue, getLastValues, sortBy } from "../helpers"
+import { findById, getKey, getLastValue, getLastValues, sortBy } from "../utils/helpers"
 import { Actions } from "./index"
 import { ModuleType, MetricType, LiveReadingEvent } from "../types/event"
 
@@ -28,7 +28,7 @@ export const dataInitialState: DataState = {
   metrics: []
 }
 
-type NewLiveMetricAction = {
+export type NewLiveMetricAction = {
   type: "NEW_LIVE_METRIC"
 } & LiveReadingEvent
 

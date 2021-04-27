@@ -1,8 +1,8 @@
 import { useContext, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { MetricType, ModuleType } from "../../types/event"
-import { AppContext } from "../../providers/AppContext"
-import { groupBy } from "../../helpers"
+import { AppContext } from "../../context/AppContext"
+import { groupBy } from "../../utils/helpers"
 
 export const useModuleTypeFilter = (): Array<{ value: string; text: string }> => {
   const { t } = useTranslation()

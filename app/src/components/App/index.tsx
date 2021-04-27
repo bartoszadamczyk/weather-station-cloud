@@ -1,12 +1,12 @@
 import React, { ReactElement, Suspense } from "react"
 import { Spin, Typography } from "antd"
 import "antd/dist/antd.css"
-import "../../helpers/i18n"
+import "../../utils/i18n"
 import AppUI from "./AppUI"
 import FullPageWrapper from "../FullPageWrapper"
-import { AppContextProvider } from "../../providers/AppContext"
-import { WebSocketProvider } from "../../providers/WebSocketContext"
-import { Config } from "../../helpers/config"
+import { AppContextProvider } from "../../context/AppContext"
+import { WebSocketProvider } from "../../context/WebSocketContext"
+import { Config } from "../../utils/config"
 
 const Loader = () => (
   <div className="Loader">

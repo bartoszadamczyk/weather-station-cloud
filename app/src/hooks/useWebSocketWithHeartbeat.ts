@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { WebSocketWithHeartbeat } from "../helpers/webSocketWithHeartbeat"
+import { WebSocketWithHeartbeat } from "../utils/websocket/webSocketWithHeartbeat"
 
 export const useWebSocketWithHeartbeat = (
   url: string,

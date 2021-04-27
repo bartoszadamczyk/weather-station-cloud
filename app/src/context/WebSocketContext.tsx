@@ -4,6 +4,8 @@ import { useWebSocketWithHeartbeat } from "../hooks/useWebSocketWithHeartbeat"
 import { AppContext } from "./AppContext"
 import { Event, parseEvent, serializeEvent, EventType } from "../types/event"
 import { Actions } from "../reducers"
+import { updateWebSocketState } from "../actions/webSocket"
+import { createNewLiveMetric } from "../actions/data"
 
 export const WebSocketContext = createContext<{
   sendAction: (sendMessage: Event) => void
@@ -26,10 +28,7 @@ const dispatchWebSocketAction = (dispatch: React.Dispatch<Actions>, data: string
 const createWebSocketAction = (action: Event): Actions | undefined => {
   switch (action.eventType) {
     case EventType.LiveReading:
-      return {
-        type: "NEW_LIVE_METRIC",
-        ...action
-      }
+      return createNewLiveMetric(action)
   }
 }
 
@@ -62,7 +61,7 @@ export const WebSocketProvider = ({
   )
 
   useEffect(() => {
-    dispatch({ type: "WEB_SOCKET_STATE_UPDATE", isConnected, isReconnecting, isClosed })
+    dispatch(updateWebSocketState(isConnected, isReconnecting, isClosed))
   }, [dispatch, isConnected, isReconnecting, isClosed])
 
   const contextValue = useMemo(() => {

@@ -1,9 +1,9 @@
 import React, { ReactElement, useContext } from "react"
 import { Table } from "antd"
 import { useTranslation } from "react-i18next"
-import { AppContext } from "../../providers/AppContext"
+import { AppContext } from "../../context/AppContext"
 import { Metric } from "../../reducers/data"
-import { getKey } from "../../helpers"
+import { getKey } from "../../utils/helpers"
 import {
   renderChart,
   renderDeviceName,

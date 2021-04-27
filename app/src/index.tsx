@@ -2,7 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom"
 import * as Sentry from "@sentry/react"
 import { Integrations } from "@sentry/tracing"
-import { Config, Environment } from "./helpers/config"
+import { Config, Environment } from "./utils/config"
 import App from "./components/App"
 import reportWebVitals from "./reportWebVitals"
 
