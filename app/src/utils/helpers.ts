@@ -1,7 +1,3 @@
-// Cool TS hacks ...
-// type NotEmptyArray<T> = [T, ...T[]]
-// <R,> in jsx
-
 type GenericRecord = Record<string | symbol | number, unknown>
 
 export function sortBy<T extends GenericRecord>(array: Array<T>, key: keyof T): Array<T> {
