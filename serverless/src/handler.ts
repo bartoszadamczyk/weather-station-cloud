@@ -27,18 +27,14 @@ export const disconnectHandler: Handler = Sentry.AWSLambda.wrapHandler(
   }
 )
 
-export const pingHandler: Handler = Sentry.AWSLambda.wrapHandler(
-  async (): Promise<APIGatewayProxyResult> => {
-    const response = { action: "pong" }
-    return returnOkJSON(response)
-  }
-)
+export const pingHandler: Handler = Sentry.AWSLambda.wrapHandler(async (): Promise<APIGatewayProxyResult> => {
+  const response = { action: "pong" }
+  return returnOkJSON(response)
+})
 
-export const eventHandler: SQSHandler = Sentry.AWSLambda.wrapHandler(
-  async (event: SQSEvent): Promise<void> => {
-    let connections
-    for (const record of event.Records) {
-      connections = await handleEvent(connections, record.body)
-    }
+export const eventHandler: SQSHandler = Sentry.AWSLambda.wrapHandler(async (event: SQSEvent): Promise<void> => {
+  let connections
+  for (const record of event.Records) {
+    connections = await handleEvent(connections, record.body)
   }
-)
+})
