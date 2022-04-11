@@ -5,7 +5,7 @@ import { AppContext } from "../../context/AppContext"
 import { Metric } from "../../reducers/data"
 import { getKey } from "../../utils/helpers"
 import {
-  renderChart,
+  // renderChart,
   renderDeviceName,
   useRenderMetricType,
   useRenderMetricValue,
@@ -72,13 +72,13 @@ const MetricTable = (): ReactElement => {
       filters: metricTypeFilter,
       onFilter: getOnFilter<Metric>("metricType"),
       sorter: getSorter<Metric>(["metricType"])
-    },
-    {
-      title: t("tableColumn.chart"),
-      dataIndex: "recentValues",
-      width: 240,
-      render: renderChart
     }
+    // {
+    //   title: t("tableColumn.chart"),
+    //   dataIndex: "recentValues",
+    //   width: 240,
+    //   render: renderChart
+    // }
   ]
 
   return (
