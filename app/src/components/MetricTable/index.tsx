@@ -47,14 +47,6 @@ const MetricTable = (): ReactElement => {
       sorter: getSorter<Metric>(["deviceId"])
     },
     {
-      title: t("tableColumn.metricType"),
-      dataIndex: "metricType",
-      render: renderMetricType,
-      filters: metricTypeFilter,
-      onFilter: getOnFilter<Metric>("metricType"),
-      sorter: getSorter<Metric>(["metricType"])
-    },
-    {
       title: t("tableColumn.metricValue"),
       dataIndex: ["metricValue"],
       render: renderMetricValue,
@@ -72,6 +64,14 @@ const MetricTable = (): ReactElement => {
       title: t("tableColumn.moduleId"),
       dataIndex: "moduleId",
       render: renderModuleId
+    },
+    {
+      title: t("tableColumn.metricType"),
+      dataIndex: "metricType",
+      render: renderMetricType,
+      filters: metricTypeFilter,
+      onFilter: getOnFilter<Metric>("metricType"),
+      sorter: getSorter<Metric>(["metricType"])
     },
     {
       title: t("tableColumn.chart"),
